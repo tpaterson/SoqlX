@@ -599,7 +599,13 @@ typedef enum SoqlParsePosition {
 	[queryListController addQuery:[self soqlString]];
 	[[NSUserDefaults standardUserDefaults] setObject:[self soqlString] forKey:@"soql"];
 	@try {
-		NSString *query = [[self soqlString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		//NSString *query = [[self soqlString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        //NSString *selected = [[myTextView string] substringWithRange:[myTextView selectedRange]]
+        
+        NSString *query = [[self soqlString] substringWithRange:[soql selectedRange]];
+        
+        
         ZKQueryResult *qr = nil;
         if ([[query lowercaseString] hasPrefix:@"find "]) {
             qr = [SearchQueryResult searchQueryResults:[sforce search:query]];

@@ -37,6 +37,9 @@ static NSString *RECENT_SHOWN = @"recentQueriesVisible";
 
 - (void)addQuery:(NSString *)soql {
 	soql = [soql stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    //NSString *selected = [[myTextView string] substringWithRange:[myTextView selectedRange]];
+    
 	if ([view upsertHead:soql]) {
         // save the current list of recent queries
 		NSMutableArray *q = [NSMutableArray arrayWithCapacity:[[view items] count]];
