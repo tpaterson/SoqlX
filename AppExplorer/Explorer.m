@@ -122,7 +122,7 @@ static NSString *KEYPATH_WINDOW_VISIBLE = @"windowVisible";
 	[defaults setObject:prod forKey:@"server"];
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:PREF_QUERY_SORT_FIELDS];
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:PREF_SKIP_ADDRESS_FIELDS];
-    [defaults setObject:[NSNumber numberWithInt:11] forKey:PREF_TEXT_SIZE];
+    [defaults setObject:[NSNumber numberWithInt:9] forKey:PREF_TEXT_SIZE];
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:PREF_SORTED_FIELD_LIST];
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:PREF_QUIT_ON_LAST_WINDOW_CLOSE];
     
@@ -599,11 +599,10 @@ typedef enum SoqlParsePosition {
 	[queryListController addQuery:[self soqlString]];
 	[[NSUserDefaults standardUserDefaults] setObject:[self soqlString] forKey:@"soql"];
 	@try {
-		//NSString *query = [[self soqlString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-        //NSString *selected = [[myTextView string] substringWithRange:[myTextView selectedRange]]
-        
-        NSString *query = [[self soqlString] substringWithRange:[soql selectedRange]];
+        NSString *highlightedSelection = [[self soqlString] substringWithRange:[soql selectedRange]];
+        NSCharacterSet *separator = [NSCharacterSet newlineCharacterSet];
+        NSArray* arryayOfQueries = [highlightedSelection componentsSeparatedByCharactersInSet: separator];
+        NSString *query = [arryayOfQueries objectAtIndex: 0];
         
         
         ZKQueryResult *qr = nil;
