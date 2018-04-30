@@ -309,8 +309,12 @@
     c.zkImage = nil;
     c.zkStandout = NO;
     c.zkTextXOffset = 8;
-	[c setTextColor:[NSColor blackColor]];
-	[c setFont:[NSFont systemFontOfSize:12.0f]];
+	//[c setTextColor:[NSColor blackColor]];
+    float fontSize = [[[NSUserDefaults standardUserDefaults] valueForKey:PREF_TEXT_SIZE] floatValue];
+    
+    NSFont *font = [NSFont fontWithName:@"Monaco" size:fontSize];
+    
+    [c setFont:font];
     
     if ([item isKindOfClass:[ZKDescribeGlobalSObject class]]) {
         c.zkTextXOffset = 18;
@@ -318,8 +322,8 @@
 
 	} else if ([item isKindOfClass:[ZKDescribeField class]]) {
 		if ([item fieldMatchesFilter:filter]) {
-			[c setFont:[NSFont boldSystemFontOfSize:13.0f]];
-			[c setTextColor:[[NSColor blueColor] blendedColorWithFraction:0.5 ofColor:[NSColor blackColor]]];
+			//[c setFont:[NSFont boldSystemFontOfSize:13.0f]];
+			//[c setTextColor:[[NSColor blueColor] blendedColorWithFraction:0.5 ofColor:[NSColor blackColor]]];
 			[c setZkStandout:YES];
 		}
 	}

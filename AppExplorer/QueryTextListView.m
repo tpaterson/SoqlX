@@ -133,7 +133,7 @@ static const CGFloat MARGIN = 5.0;
     if (self) {
         // Initialization code here.
 		textAttributes =  [[NSMutableDictionary dictionaryWithObjectsAndKeys:
-							[NSFont titleBarFontOfSize:11.0], NSFontAttributeName,
+							[NSFont titleBarFontOfSize:18.0], NSFontAttributeName,
 							[[NSColor blueColor] shadowWithLevel:0.33], NSForegroundColorAttributeName,
 							nil] retain];
 		items = [[NSMutableArray arrayWithCapacity:10] retain];

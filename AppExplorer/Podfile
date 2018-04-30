@@ -9,4 +9,5 @@ target 'SoqlXplorer' do
   pod 'macOSThemeKit', '~> 1.2.0'
   # Pods for SoqlXplorer
 
+  pod 'ZKSforce', '~> 40.0.0'
 end

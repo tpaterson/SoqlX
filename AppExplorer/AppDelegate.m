@@ -23,6 +23,8 @@
 #import "Explorer.h"
 #import "Prefs.h"
 #import <Sparkle/Sparkle.h>
+@import macOSThemeKit;
+
 
 @implementation AppDelegate
 
@@ -56,11 +58,37 @@
 }
 
 -(void)applicationDidFinishLaunching:(NSNotification *)notification {
-	[self resetApiVersionOverrideIfAppVersionChanged];
-    [self openNewWindow:self];
+    /// Define default theme.
+    /// Used on first run. Default: `SystemTheme`.
+    /// Note: `SystemTheme` is a special theme that resolves to `ThemeManager.lightTheme` or `ThemeManager.darkTheme`,
+    /// depending on the macOS preference at 'System Preferences > General > Appearance'.
+    //[TKThemeManager setDefaultTheme:TKThemeManager.darkTheme];
     
-    // If the updater is going to restart the app, we need to close the login sheet if its currently open.
-    [[SUUpdater sharedUpdater] setDelegate:self];
+    /// Define window theme policy.
+    [TKThemeManager sharedManager].windowThemePolicy = TKThemeManagerWindowThemePolicyThemeAllWindows;
+    //[TKThemeManager sharedManager].windowThemePolicy = TKThemeManagerWindowThemePolicyThemeSomeWindows;
+    //[TKThemeManager sharedManager].themableWindowClasses = @[[MyWindow class]];
+    //[TKThemeManager sharedManager].windowThemePolicy = TKThemeManagerWindowThemePolicyDoNotThemeSomeWindows;
+    //[TKThemeManager sharedManager].notThemableWindowClasses = @[[NSPanel class]];
+    //[TKThemeManager sharedManager].windowThemePolicy = TKThemeManagerWindowThemePolicyDoNotThemeWindows;
+    
+    NSURL* thisAppSupportURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]] ;
+    
+    //NSURL* userThemesFolderURL = [thisAppSupportURL URLByAppendingPathComponent:@"Themes"];
+    [TKThemeManager sharedManager].userThemesFolderURL = thisAppSupportURL;
+    
+    
+    TKUserTheme *userTheme = [[TKThemeManager sharedManager] themeWithIdentifier:@"com.luckymarmot.ThemeKit.LadyInDark"];
+    
+   [[TKThemeManager sharedManager] setTheme:userTheme];
+    
+    
+    // ******* Leave the following alone ***** //
+     [self resetApiVersionOverrideIfAppVersionChanged];
+     [self openNewWindow:self];
+ 
+     // If the updater is going to restart the app, we need to close the login sheet if its currently open.
+     [[SUUpdater sharedUpdater] setDelegate:self];
 }
 
 -(void)openNewWindow:(id)sender {

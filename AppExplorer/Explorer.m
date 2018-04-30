@@ -79,8 +79,8 @@ static NSString *KEYPATH_WINDOW_VISIBLE = @"windowVisible";
 
 -(id)init {
     self = [super init];
-    self.fieldColor = [NSColor colorWithCalibratedRed:0.25 green:0.25 blue:0.8 alpha: 1.0];
-    self.keywordColor = [NSColor colorWithCalibratedRed:0.8 green:0.25 blue:0.25 alpha: 1.0];
+    self.keywordColor = [NSColor colorWithCalibratedRed:0.25 green:0.25 blue:0.8 alpha: 1.0];
+    self.fieldColor = [NSColor colorWithCalibratedRed:0.8 green:0.25 blue:0.25 alpha: 1.0];
     
     self.underlineStyle = [NSNumber numberWithInt:(NSUnderlineStyleSingle | NSUnderlinePatternDot | NSUnderlineByWordMask)];
     NSMutableDictionary *u = [NSMutableDictionary dictionary];
@@ -102,7 +102,7 @@ static NSString *KEYPATH_WINDOW_VISIBLE = @"windowVisible";
     });
     return instance;
 }
-
+ 
 @end
 
 @implementation Explorer
@@ -433,7 +433,9 @@ typedef enum SoqlParsePosition {
     NSTextStorage *soqlTextStorage = [soql textStorage];
     NSString *soqlText = [soqlTextStorage string];
     float fontSize = [[[NSUserDefaults standardUserDefaults] valueForKey:PREF_TEXT_SIZE] floatValue];
-    NSFont *font = [NSFont userFixedPitchFontOfSize:fontSize];
+    
+    NSFont *font = [NSFont fontWithName:@"Monaco" size:fontSize];
+    
     if (font == nil) {
         NSLog(@"userFixedPitchFontOfSize:%f returned nil!", fontSize);
     } else {
