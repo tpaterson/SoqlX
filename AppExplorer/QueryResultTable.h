@@ -23,27 +23,62 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "SObjectSortDescriptor.h"
 
 @class ZKQueryResult;
 @class EditableQueryResultWrapper;
 
 @interface QueryResultTable : NSObject {
-	id							delegate;
-	NSTableView					*table;
-	ZKQueryResult				*queryResult;
-	EditableQueryResultWrapper	*wrapper;
+    id                           __weak delegate;
+    NSTableView                  *__weak table;
+    EditableQueryResultWrapper   *wrapper;
 }
 
-- (id)initForTableView:(NSTableView *)view;
+- (instancetype)initForTableView:(NSTableView *)view NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
 
-- (void)removeRowAtIndex:(int)row;
+- (void)removeRowsWithIds:(NSSet<NSString*> *)recordIds;
 
-@property (readonly) NSTableView *table;
-@property (readonly) EditableQueryResultWrapper *wrapper;
-@property (retain) ZKQueryResult *queryResult;
-@property (assign) id delegate;
+@property (weak, readonly) NSTableView *table;
+@property (weak, readonly) EditableQueryResultWrapper *wrapper;
+@property (strong) ZKQueryResult *queryResult;
+@property (weak) id delegate;
+@property describeProvider describer;
 
--(BOOL)hasCheckedRows;
+@property (readonly) BOOL hasCheckedRows;
+
 -(void)showHideErrorColumn;
--(void)replaceQueryResult:(ZKQueryResult *)queryResult;	// this is like setQR, except it doesn't reset everything
+-(void)addQueryMoreResults:(ZKQueryResult *)queryResult;
+
+@end
+
+// These are exposed just for testing, otherwise they are internal to QueryResultTable
+@interface ColumnResult : NSObject
+@property (assign) NSInteger count;
+@property (assign) NSInteger max;
+@property (assign) NSInteger percentile80;
+@property (assign) NSInteger headerWidth;
+@property (assign) NSInteger width;
+@property (retain) NSString *identifier;
+@property (retain) NSString *label;
+@end
+
+@interface ColumnBuilder : NSObject {
+    NSMutableString             *buffer;
+    NSMutableArray<NSNumber*>   *vals;
+    NSInteger                   minToConsider;
+    NSInteger                   minCount;
+    NSInteger                   headerWidth;
+}
+@property (retain) NSFont *font;
+@property (retain) NSString *identifier;
+@property (retain) NSString *label;
+@property (assign) NSInteger width;
+
+-(instancetype)initWithId:(NSString*)i font:(NSFont*)f NS_DESIGNATED_INITIALIZER;
+-(instancetype)init NS_UNAVAILABLE;
+
+-(void)add:(NSString *)s;
+-(ColumnResult*)resultsWithOffset:(NSInteger)pad;
+
 @end

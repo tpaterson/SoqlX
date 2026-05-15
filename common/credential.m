@@ -1,4 +1,4 @@
-// Copyright (c) 2006-2013 Simon Fell
+// Copyright (c) 2006-2013,2021 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -20,276 +20,150 @@
 //
 
 #import "credential.h"
+#import "Defaults.h"
 
 @implementation NSURL (ZKKeychain)
-- (SecProtocolType)SecProtocolType {
-	return [[[self scheme] lowercaseString] isEqualToString:@"http"] ? kSecProtocolTypeHTTP : kSecProtocolTypeHTTPS;
+-(NSString*)friendlyHostLabel {
+    if ([self.host caseInsensitiveCompare:@"login.salesforce.com"] == NSOrderedSame) {
+        return @"Production";
+    }
+    if ([self.host caseInsensitiveCompare:@"test.salesforce.com"] == NSOrderedSame) {
+        return @"Sandbox";
+    }
+    return self.host;
 }
-- (CFTypeRef)SecAttrProtocol {
-    return [[[self scheme] lowercaseString] isEqualToString:@"http"] ? kSecAttrProtocolHTTP : kSecAttrProtocolHTTPS;
+-(BOOL)isStandardEndpoint {
+    return  ([self.host caseInsensitiveCompare:@"login.salesforce.com"] == NSOrderedSame) ||
+            ([self.host caseInsensitiveCompare:@"test.salesforce.com"] == NSOrderedSame);
 }
-
 @end
 
 @implementation Credential
 
-+ (NSArray *)credentialsForServer:(NSString *)protocolAndServer {
-	NSURL *url = [NSURL URLWithString:protocolAndServer];
-	NSString *server = [url host];
-	
+NSString *AUTH_SVC_NAME = @"com.pocketsoap.osx.soqlx.auth";
+
++(NSArray<Credential*> *)credentials {
     NSMutableArray *results = [NSMutableArray array];
-	NSArray *queryResults = nil;
-    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
-                           kSecClassInternetPassword, kSecClass,
-                           kSecMatchLimitAll, kSecMatchLimit,
-                           kCFBooleanTrue, kSecReturnRef,
-                           kCFBooleanTrue, kSecReturnAttributes,
-                           server, kSecAttrServer,
-                           [url SecAttrProtocol], kSecAttrProtocol,
-                           nil];
-
-    OSStatus status = SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)&queryResults);
-	if (status == noErr) {
+    NSArray *queryResults = nil;
+    NSDictionary *query = @{
+        (__bridge NSString*)kSecClass:              (__bridge NSString*)kSecClassGenericPassword,
+        (__bridge NSString*)kSecAttrLabel:          AUTH_SVC_NAME,
+        (__bridge NSString*)kSecMatchLimit:         (__bridge NSString*)kSecMatchLimitAll,
+        (__bridge NSString*)kSecReturnRef:          @TRUE,
+        (__bridge NSString*)kSecReturnAttributes:   @TRUE,
+    };
+    OSStatus status = SecItemCopyMatching((CFDictionaryRef)query, (void *)&queryResults);
+    if (status == noErr) {
         for (NSDictionary *item in queryResults) {
-            NSString *username = [item objectForKey:kSecAttrAccount];
-            SecKeychainItemRef itemRef = (SecKeychainItemRef)[item objectForKey:kSecValueRef];
-            [results addObject:[Credential forServer:protocolAndServer username:username keychainItem:itemRef]];
+            NSString *username = item[(__bridge NSString*)kSecAttrAccount];
+            NSString *host = item[(__bridge NSString*)kSecAttrService];
+            NSURL *url = [NSURL URLWithString:[@"https://" stringByAppendingString:host]];
+            SecKeychainItemRef itemRef = (__bridge SecKeychainItemRef)item[(__bridge NSString*)kSecValueRef];
+            [results addObject:[[Credential alloc] initForServer:url username:username keychainItem:itemRef]];
         }
-        CFRelease(queryResults);
-	} else {
-		NSLog(@"SecItemCopyMatching returned error %ld", (long)status);
-	}
-	return results;
+    } else if (status == errSecItemNotFound) {
+        NSLog(@"No keychain items found");
+    } else {
+        NSLog(@"SecItemCopyMatching returned error %ld", (long)status);
+    }
+    return results;
 }
 
-+ (NSArray *)sortedCredentialsForServer:(NSString *)protocolAndServer {
-	NSArray *credentials = [Credential credentialsForServer:protocolAndServer];
-	NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"username" ascending:YES];
-	NSArray *sorted = [credentials sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
-	[sortDesc release];
-	return sorted;
++(NSArray<Credential*>*)credentialsInMruOrder {
+    NSMutableArray<Credential*>* creds = [[self credentials] mutableCopy];
+    NSInteger __block targetIdx = 0;
+    NSArray *mru = [[NSUserDefaults standardUserDefaults] arrayForKey:DEF_LOGIN_MRU];
+    [mru enumerateObjectsUsingBlock:^(id  _Nonnull mruEntry, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *username = mruEntry[LOGIN_MRU_USERNAME];
+        NSString *host = mruEntry[LOGIN_MRU_HOST];
+        NSInteger matchIdx = [creds indexOfObjectPassingTest:^BOOL(Credential * _Nonnull c, NSUInteger idx, BOOL * _Nonnull stop) {
+            return [c.username isEqual:username] && [c.server.host caseInsensitiveCompare:host] == NSOrderedSame;
+        }];
+        if (matchIdx != NSNotFound) {
+            if (matchIdx != targetIdx) {
+                Credential *c = creds[matchIdx];
+                [creds removeObjectAtIndex:matchIdx];
+                [creds insertObject:c atIndex:targetIdx];
+            }
+            targetIdx++;
+            *stop = targetIdx == creds.count;
+        }
+    }];
+    return creds;
 }
 
-+ (id)forServer:(NSString *)server username:(NSString *)un keychainItem:(SecKeychainItemRef)kcItem {
-	return [[[Credential alloc] initForServer:server username:un keychainItem:kcItem] autorelease];
-}
-
-+ (id)createCredentialForServer:(NSString *)protocolAndServer username:(NSString *)un password:(NSString *)pwd {
-	NSURL *url = [NSURL URLWithString:protocolAndServer];
-	NSString *server = [url host];
-	SecKeychainItemRef itemRef;
-	OSStatus status = SecKeychainAddInternetPassword (
-								NULL,
-                                (UInt32)[server lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 
-                                [server UTF8String],
-								0, NULL,
-								(UInt32)[un lengthOfBytesUsingEncoding:NSUTF8StringEncoding],
-								[un UTF8String],
-								0, NULL,
-								0,
-								[url SecProtocolType],
-								kSecAuthenticationTypeDefault,
-								(UInt32)[pwd lengthOfBytesUsingEncoding:NSUTF8StringEncoding],
-								[pwd UTF8String],
-								&itemRef);
-	if (status != noErr) {
-		NSLog(@"SecKeychainAddInternetPassword returned error %ld", (long)status);
-		return nil;
-	}
-	Credential *result = [Credential forServer:protocolAndServer username:un keychainItem:itemRef];
++(id)createCredential:(NSURL *)url username:(NSString *)un refreshToken:(NSString *)tkn {
+    NSDictionary* item = @{
+        (__bridge NSString*)kSecClass:          (__bridge NSString*)kSecClassGenericPassword,
+        (__bridge NSString*)kSecAttrService:    [url host],
+        (__bridge NSString*)kSecAttrAccount:    un,
+        (__bridge NSString*)kSecAttrLabel:      AUTH_SVC_NAME,
+        (__bridge NSString*)kSecAttrDescription:@"Refresh Token",
+        (__bridge NSString*)kSecValueData:      [tkn dataUsingEncoding:NSUTF8StringEncoding],
+        (__bridge NSString*)kSecReturnRef:      @TRUE,
+    };
+    SecKeychainItemRef itemRef;
+    OSStatus status = SecItemAdd((__bridge CFDictionaryRef)item, (void*) &itemRef);
+    if (status != noErr) {
+        NSLog(@"SecItemAdd returned error %ld", (long)status);
+        return nil;
+    }
+    NSURL *authUrl = [NSURL URLWithString:[@"https://" stringByAppendingString:url.host]];
+    Credential *result = [[Credential alloc] initForServer:authUrl username:un keychainItem:itemRef];
     CFRelease(itemRef);
     return result;
 }
 
-- (id)initForServer:(NSString *)s username:(NSString *)un keychainItem:(SecKeychainItemRef)kcItem {
-	self = [super init];
-	server = [s copy];
-	username = [un copy];
-	keychainItem = kcItem;
+-(id)initForServer:(NSURL *)s username:(NSString *)un keychainItem:(SecKeychainItemRef)kcItem {
+    self = [super init];
+    server = [s copy];
+    username = [un copy];
+    keychainItem = kcItem;
     CFRetain(keychainItem);
-	return self;
+    return self;
 }
 
 - (void)dealloc {
-	[server release];
-	[username release];
-	CFRelease(keychainItem);
-	[super dealloc];
+    CFRelease(keychainItem);
 }
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"%@ at %@", username, server];
+    return [NSString stringWithFormat:@"%@ at %@", username, server];
 }
 
-- (NSString *)server {
-	return server;
+- (NSURL *)server {
+    return server;
 }
 
 - (NSString *)username {
-	return username;
+    return username;
 }
 
-- (NSString *)password {
-	SecKeychainAttribute a[] = { { 0, 0, NULL } };
-	SecKeychainAttributeList al = { 0, a };
-	UInt32 length = 0;
-	void *data = 0;
-	NSString *pwd = nil;
-	if (noErr == SecKeychainItemCopyContent(keychainItem, NULL, &al, &length, &data)) {
-		pwd = [[[NSString alloc] initWithBytes:data length:length encoding:NSUTF8StringEncoding] autorelease];
-        SecKeychainItemFreeContent(&al, data);
-	}
-	return pwd;
+- (NSString *)token {
+    UInt32 length = 0;
+    void *data = 0;
+    NSString *pwd = nil;
+    if (noErr == SecKeychainItemCopyContent(keychainItem, NULL, NULL, &length, &data)) {
+        pwd = [[NSString alloc] initWithBytes:data length:length encoding:NSUTF8StringEncoding];
+        SecKeychainItemFreeContent(NULL, data);
+    }
+    return pwd;
 }
 
-- (void)removeFromKeychain {
-	SecKeychainItemDelete(keychainItem);
+-(OSStatus)updateToken:(NSString *)newToken {
+    OSStatus status = SecKeychainItemModifyAttributesAndData (
+                                    keychainItem,   // the item reference
+                                    NULL,           // no change to attributes
+                                    (UInt32)[newToken lengthOfBytesUsingEncoding:NSUTF8StringEncoding],
+                                    [newToken UTF8String] );
+    if (status != noErr) {
+        NSLog(@"SecKeychainItemModifyAttributesAndData returned %ld", (long)status);
+    }
+    return status;
 }
 
-BOOL checkAccessToAcl(SecACLRef acl, NSData *thisAppHash) {
-	NSArray *apps;
-	NSString *desc;
-	SecKeychainPromptSelector ps;
-	OSStatus err = SecACLCopyContents(acl, (CFArrayRef *)&apps, (CFStringRef *)&desc, &ps);
-	BOOL res = NO;
-	if (err == noErr) {
-		if (apps == nil) {
-			res = YES;	// from the docs, if the app list is null, anyone can access the entry
-		} else {
-			// see if we're in the list of apps
-			NSData *aData;
-			SecTrustedApplicationRef a;
-			NSEnumerator *e = [apps objectEnumerator];
-			while ((a = (SecTrustedApplicationRef)[e nextObject])) {
-				SecTrustedApplicationCopyData(a, (CFDataRef *)&aData);
-				if ([aData isEqualToData:thisAppHash]) res = YES;
-				CFRelease(aData);
-				if (res) break;
-			}
-			CFRelease(apps);
-		}
-		CFRelease(desc);
-	} else {
-		NSLog(@"SecACLCopySimpleContents failed with error %ld", (long)err);
-	}
-	return res;
-}
-
-- (BOOL)canReadPasswordWithoutPrompt {
-	SecTrustedApplicationRef app;
-	OSStatus err = SecTrustedApplicationCreateFromPath(NULL, &app);
-	if (noErr != err) {
-		NSLog(@"SecTrustedApplicationCreateFromPath failed with error %ld", (long)err);
-		return NO;
-	}
-	NSData *thisAppHash;
-	BOOL res = NO;
-	err = SecTrustedApplicationCopyData(app, (CFDataRef *)&thisAppHash);
-	if (err == noErr) {
-		SecAccessRef access;
-		err = SecKeychainItemCopyAccess(keychainItem, &access);
-		if (noErr == err) {
-            NSArray *acls = (NSArray *)SecAccessCopyMatchingACLList(access, kSecACLAuthorizationDecrypt);
-            if (acls != NULL) {
-                SecACLRef acl;
-                NSEnumerator *e = [acls objectEnumerator];
-                while ((acl = (SecACLRef)[e nextObject])) {
-                    res = checkAccessToAcl(acl, thisAppHash);
-                    if (res) break;
-                }
-                CFRelease(acls);
-            }
-			CFRelease(access);
-		} else {
-			NSLog(@"SecKeychainItemCopyAccess failed with error %ld", (long)err);
-		}
-		CFRelease(thisAppHash);
-	} else {
-		NSLog(@"SecTrustedApplicationCopyData failed with error %ld", (long)err);
-	}
-	CFRelease(app);
-	return res;
-}
-
-- (OSStatus)setKeychainAttribute:(SecItemAttr)attribute newValue:(NSString *)val newPassword:(NSString *)password {
-	// Set up attribute vector (each attribute consists of {tag, length, pointer}):
-	SecKeychainAttribute attrs[] = {
-			{ attribute, (UInt32)[val lengthOfBytesUsingEncoding:NSUTF8StringEncoding], (char *)[val UTF8String] } };
-	const SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]),  attrs };
-	OSStatus status = SecKeychainItemModifyAttributesAndData (
-									keychainItem,   // the item reference
-									&attributes,    // no change to attributes
-									(UInt32)[password lengthOfBytesUsingEncoding:NSUTF8StringEncoding],
-									[password UTF8String] );
-	if (status != noErr) 
-		NSLog(@"SecKeychainItemModifyAttributesAndData returned %ld", (long)status);
-	return status;
-}
-
-- (void)setServer:(NSString *)protocolAndServer {
-	NSURL *url = [NSURL URLWithString:protocolAndServer];
-	NSString *host = [url host];
-	SecProtocolType protocol = [url SecProtocolType];
-	
-	// Set up attribute vector (each attribute consists of {tag, length, pointer}):
-	SecKeychainAttribute attrs[] = { {kSecServerItemAttr, (UInt32)[host lengthOfBytesUsingEncoding:NSUTF8StringEncoding], (char *)[host UTF8String] }, 
-							  	     {kSecProtocolItemAttr, sizeof(SecProtocolType), &protocol } };
-								
-	const SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]),  attrs };
-	OSStatus status = SecKeychainItemModifyAttributesAndData (
-							keychainItem,   // the item reference
-							&attributes,    // no change to attributes
-							0,
-							nil );
-	if (status == noErr) {
-		[server release];
-		server = [protocolAndServer copy];
-	}
-	NSAssert(noErr == status, @"Unable to set server name in keychain entry");
-}
-
-- (void)setUsername:(NSString *)newUsername {
-	NSAssert(noErr == [self update:newUsername password:nil], @"Unable to set username attribute in keychain entry");
-}
-
-- (void)setPassword:(NSString *)newPassword {
-	NSAssert(noErr == [self update:username password:newPassword], @"Unable to set password attribute in keychain entry");
-}
-
-- (OSStatus)update:(NSString *)newUsername password:(NSString *)newPassword {
-	OSStatus status = [self setKeychainAttribute:kSecAccountItemAttr newValue:newUsername newPassword:newPassword];
-	if (status == noErr)  {
-		[username autorelease];
-		username = [newUsername copy];
-	}	
-	return status;
-}
-
-- (NSString *)stringAttribute:(int)attributeToRead {
-	SecKeychainAttribute a[] = { { attributeToRead, 0, NULL } };
-	SecKeychainAttributeList al = { 1, a };
-	NSString *comment = nil;
-	if (noErr == SecKeychainItemCopyContent(keychainItem, NULL, &al, nil, nil)) {
-        comment = [[[NSString alloc] initWithBytes:a[0].data length:a[0].length encoding:NSUTF8StringEncoding] autorelease];
-	}
-	SecKeychainItemFreeContent(&al, nil);
-	return comment;
-}
-
-- (NSString *)comment {
-	return [self stringAttribute:kSecCommentItemAttr];
-}
-
-- (NSString *)creator {
-	return [self stringAttribute:kSecCreatorItemAttr];
-}
-
-- (void)setComment:(NSString *)newComment {
-	NSAssert(noErr == [self setKeychainAttribute:kSecCommentItemAttr newValue:newComment newPassword:nil], @"Unable to set comment attribute in keychain entry");
-}
-
-- (void)setCreator:(NSString *)newCreator {
-	NSAssert(noErr == [self setKeychainAttribute:kSecCreatorItemAttr newValue:newCreator newPassword:nil], @"Unable to set creator attribute in keychain entry"); 
+-(OSStatus)deleteEntry {
+    return SecKeychainItemDelete(keychainItem);
 }
 
 @end

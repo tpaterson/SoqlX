@@ -34,9 +34,9 @@
 // This is a listview of items where each item is a string
 // each item is managed by a QueryTextListViewItem
 @interface QueryTextListView : NSView {
-	NSMutableArray                  *items;
-	NSDictionary                    *textAttributes;
-    id<QueryTextListViewDelegate>   delegate;
+    NSMutableArray                  *items;
+    NSDictionary                    *textAttributes;
+    id<QueryTextListViewDelegate>   __weak delegate;
 }
 
 // set the list of items in the list, to this array of strings.
@@ -49,30 +49,33 @@
 -(BOOL)upsertHead:(NSString *)text;
 
 // The current list of QueryTextListViewItems in the list view.
--(NSArray *)items;
+@property (readonly, copy) NSArray *items;
 
-@property (assign, nonatomic) id<QueryTextListViewDelegate> delegate;
+@property (weak, nonatomic) id<QueryTextListViewDelegate> delegate;
 
 @end
 
 // The view/container for a single item in the list.
 @interface QueryTextListViewItem : NSView {
-	NSString		*text;
-	NSDictionary	*textAttributes;
-	CGFloat			verticalPad;
-	NSRect			textRect;
-	NSColor			*backgroundColor;
+    NSString        *text;
+    NSDictionary    *textAttributes;
+    CGFloat          verticalPad;
+    NSRect           textRect;
+    NSColor         *backgroundColor;
 
-	NSTrackingArea	*trackingArea;
-	BOOL			highlighted;
+    NSTrackingArea  *trackingArea;
+    BOOL             highlighted;
     
-    QueryTextListView *listView;
+    __weak QueryTextListView *listView;
 }
 
--(id)initWithFrame:(NSRect)f attributes:(NSDictionary*)attributes listView:(QueryTextListView *)lv;
+-(instancetype)initWithFrame:(NSRect)f attributes:(NSDictionary*)attributes listView:(QueryTextListView *)lv NS_DESIGNATED_INITIALIZER;
+-(instancetype)init NS_UNAVAILABLE;
+-(instancetype)initWithCoder:(NSCoder *)decoder NS_UNAVAILABLE;
+-(instancetype)initWithFrame:(NSRect)frameRect NS_UNAVAILABLE;
 
-@property (retain) NSString *text;
-@property (retain) NSColor	*backgroundColor;
+@property (strong) NSString *text;
+@property (strong) NSColor  *backgroundColor;
 
 -(void)setFrameWidth:(CGFloat)w;
 

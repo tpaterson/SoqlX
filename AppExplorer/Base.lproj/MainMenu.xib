@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="1677" id="1678"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <menu title="MainMenu" systemMenu="main" id="29" userLabel="MainMenu">
+            <items>
+                <menuItem title="SoqlXplorer" id="56">
+                    <menu key="submenu" title="SoqlXplorer" systemMenu="apple" id="57">
+                        <items>
+                            <menuItem title="About SoqlXplorer" id="58">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="196">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Preferences…" keyEquivalent="," id="129">
+                                <connections>
+                                    <action selector="makeKeyAndOrderFront:" target="343" id="1680"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="143">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Services" id="131">
+                                <menu key="submenu" title="Services" systemMenu="services" id="130"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="144">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Hide SoqlXplorer" keyEquivalent="h" id="134">
+                                <connections>
+                                    <action selector="hide:" target="-2" id="152"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Hide Others" keyEquivalent="h" id="145">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-2" id="146"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show All" id="150">
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-2" id="153"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="149">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Quit SoqlXplorer" keyEquivalent="q" id="136">
+                                <connections>
+                                    <action selector="terminate:" target="-2" id="139"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="File" id="83">
+                    <menu key="submenu" title="File" id="81">
+                        <items>
+                            <menuItem title="Saved OAuth Logins" id="qiJ-Ab-pR7">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Saved OAuth Logins" id="fg8-7E-H4W">
+                                    <items>
+                                        <menuItem title="Item" id="LpT-QN-qVh">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Login" keyEquivalent="l" id="249">
+                                <connections>
+                                    <action selector="openNewWindow:" target="1677" id="1682"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Refresh Metadata" keyEquivalent="D" id="8fI-tf-5sD">
+                                <connections>
+                                    <action selector="refreshMetadata:" target="-1" id="A4n-Hh-bqu"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="687">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Open..." keyEquivalent="o" id="444-Td-dj5">
+                                <connections>
+                                    <action selector="open:" target="-1" id="b9b-L8-yUX"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="5wU-Wq-xeR"/>
+                            <menuItem title="Save..." keyEquivalent="s" id="1cx-6s-qnE">
+                                <connections>
+                                    <action selector="save:" target="-1" id="nhp-1u-MsJ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save Query Results" keyEquivalent="S" id="1340">
+                                <connections>
+                                    <action selector="saveQueryResults:" target="-1" id="1683"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="1341">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Print…" keyEquivalent="p" id="688">
+                                <connections>
+                                    <action selector="print:" target="-1" id="691"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Page Setup…" keyEquivalent="P" id="689">
+                                <connections>
+                                    <action selector="runPageLayout:" target="-1" id="690"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Edit" id="163">
+                    <menu key="submenu" title="Edit" id="169">
+                        <items>
+                            <menuItem title="Undo" keyEquivalent="z" id="158">
+                                <connections>
+                                    <action selector="undo:" target="-1" id="180"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Redo" keyEquivalent="Z" id="173">
+                                <connections>
+                                    <action selector="redo:" target="-1" id="178"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="156">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Cut" keyEquivalent="x" id="160">
+                                <connections>
+                                    <action selector="cut:" target="-1" id="175"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copy" keyEquivalent="c" id="157">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="181"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Paste" keyEquivalent="v" id="171">
+                                <connections>
+                                    <action selector="paste:" target="-1" id="176"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Paste and Match Style" keyEquivalent="V" id="204">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="pasteAsPlainText:" target="-1" id="205"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Delete" id="164">
+                                <connections>
+                                    <action selector="delete:" target="-1" id="195"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select All" keyEquivalent="a" id="172">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="179"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="174">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Find" id="168">
+                                <menu key="submenu" title="Find" id="159">
+                                    <items>
+                                        <menuItem title="Find…" tag="1" keyEquivalent="f" id="154">
+                                            <connections>
+                                                <action selector="performFindPanelAction:" target="-1" id="199"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Find Next" tag="2" keyEquivalent="g" id="167">
+                                            <connections>
+                                                <action selector="performFindPanelAction:" target="-1" id="200"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Find Previous" tag="3" keyEquivalent="G" id="162">
+                                            <connections>
+                                                <action selector="performFindPanelAction:" target="-1" id="201"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Use Selection for Find" tag="7" keyEquivalent="e" id="161">
+                                            <connections>
+                                                <action selector="performFindPanelAction:" target="-1" id="202"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Jump to Selection" keyEquivalent="j" id="155">
+                                            <connections>
+                                                <action selector="centerSelectionInVisibleArea:" target="-1" id="203"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Spelling" id="184">
+                                <menu key="submenu" title="Spelling" id="185">
+                                    <items>
+                                        <menuItem title="Spelling…" keyEquivalent=":" id="187">
+                                            <connections>
+                                                <action selector="showGuessPanel:" target="-1" id="188"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Check Spelling" keyEquivalent=";" id="189">
+                                            <connections>
+                                                <action selector="checkSpelling:" target="-1" id="190"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Check Spelling as You Type" id="191">
+                                            <connections>
+                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="192"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Window" id="19">
+                    <menu key="submenu" title="Window" systemMenu="window" id="24">
+                        <items>
+                            <menuItem title="Minimize" keyEquivalent="m" id="23">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="37"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Zoom" id="197">
+                                <connections>
+                                    <action selector="performZoom:" target="-1" id="198"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="92">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Bring All to Front" id="5">
+                                <connections>
+                                    <action selector="arrangeInFront:" target="-1" id="39"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Query" id="Rmy-oH-MLd">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Query" id="I4h-NI-JIe">
+                        <items>
+                            <menuItem title="Query" keyEquivalent="r" id="KDK-8h-YWC">
+                                <connections>
+                                    <action selector="executeQuery:" target="-1" id="NNG-q3-oiQ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Query All" keyEquivalent="R" id="gtT-r3-rXR">
+                                <connections>
+                                    <action selector="executeQueryAll:" target="-1" id="hx8-VI-nsT"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Query More" keyEquivalent="M" id="NRN-z4-7LD">
+                                <connections>
+                                    <action selector="queryMore:" target="-1" id="5OO-bu-3EB"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Help" id="103">
+                    <menu key="submenu" title="Help" id="106">
+                        <items>
+                            <menuItem title="Soql Xplorer Help" keyEquivalent="?" id="111">
+                                <connections>
+                                    <action selector="launchHelp:" target="1677" id="1679"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Check For Updates" id="341">
+                                <connections>
+                                    <action selector="checkForUpdates:" target="340" id="342"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="-1076" y="-230"/>
+        </menu>
+        <customObject id="340" userLabel="SUUpdater" customClass="SUUpdater"/>
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="prefs" animationBehavior="default" id="343" userLabel="Preferences">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <rect key="contentRect" x="710" y="756" width="435" height="457"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <value key="minSize" type="size" width="213" height="100"/>
+            <value key="maxSize" type="size" width="1500" height="1200"/>
+            <view key="contentView" id="344">
+                <rect key="frame" x="0.0" y="0.0" width="435" height="457"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="345">
+                        <rect key="frame" x="18" y="395" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="395" id="NWB-ki-jpc"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Check for updates at startup" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1204">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.SUCheckAtStartup" id="1691">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="1686">
+                        <rect key="frame" x="18" y="280" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="395" id="iGz-jk-4SO"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Sort fields in alphabetical order in generated queries" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1687">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.SortFieldsInGeneratedQueries" id="1690">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="1692">
+                        <rect key="frame" x="18" y="258" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="395" id="TlY-Lz-2gu"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Use component fields for addresses in generated queries" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1693">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.SkipAddressFieldsInGeneratedQueries" id="1695">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="snb-S8-oRC">
+                        <rect key="frame" x="18" y="351" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="395" id="PRm-9D-lXV"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Filter unset properties in the details window" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="hVe-f4-hif">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.DetailsFilterEmptyProps" id="UPW-gA-E5h">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="YDz-10-l7r">
+                        <rect key="frame" x="18" y="302" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="283" id="cTm-Pa-U0s"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Sort fields in alphabetical order in sidebar" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="XYO-XB-7Uv">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.SortedFieldList" id="5F7-OJ-AJZ">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="R0v-P7-kcC">
+                        <rect key="frame" x="18" y="236" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="283" id="koc-57-dch"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Syntax highlight query" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="JZi-hw-hZk">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.SoqlColoring" id="Q7e-Qr-DVM">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="sdA-fY-fqy">
+                        <rect key="frame" x="18" y="373" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="395" id="dhy-x5-xhz"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Quit SoqlX when last window closes" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Xe7-dv-Q64">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.QuitOnLastWindowClose" id="6ew-U4-ULz">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1rW-mR-B3p">
+                        <rect key="frame" x="18" y="54" width="254" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="Nak-Bf-mUO">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <binding destination="1677" name="value" keyPath="editFontLabel" id="pyb-0Q-18F"/>
+                        </connections>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N4F-3N-8jr">
+                        <rect key="frame" x="18" y="78" width="254" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="3M5-4e-pFG"/>
+                        </constraints>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Edit Text Font:" id="ncI-E0-KU0">
+                            <font key="font" metaFont="systemBold"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cX7-EX-NvD">
+                        <rect key="frame" x="308" y="45" width="114" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="428-Ol-3WZ"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="Change Font" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Mhh-kR-IiD">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="showFontPrefs:" target="1677" id="WhR-9k-dJ6"/>
+                        </connections>
+                    </button>
+                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L8r-v1-FRe">
+                        <rect key="frame" x="17" y="149" width="117" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" priority="555" constant="110" id="aym-4L-dYP"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="bfd-hu-eq1"/>
+                        </constraints>
+                        <popUpButtonCell key="cell" type="push" title="10" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Sd9-u2-l5g" id="Pvv-aM-0Yi">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="Mcg-Un-xd3">
+                                <items>
+                                    <menuItem title="10" state="on" id="Sd9-u2-l5g"/>
+                                    <menuItem title="25" id="jU4-Lq-fdR"/>
+                                    <menuItem title="50" id="0mt-Du-4hE"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <binding destination="354" name="selectedValue" keyPath="values.MaxRecentQueries" id="zPU-KL-ce8">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </popUpButton>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UE6-jo-hRU">
+                        <rect key="frame" x="136" y="156" width="281" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Max number of recent queries to keep" id="06p-b1-oSX">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="359">
+                        <rect key="frame" x="308" y="13" width="114" height="32"/>
+                        <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="1205">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="performClose:" target="343" id="1681"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pJl-RQ-OTi">
+                        <rect key="frame" x="18" y="420" width="399" height="17"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="General" id="L8E-vj-YUG">
+                            <font key="font" metaFont="systemBold" size="14"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a72-vu-tIW">
+                        <rect key="frame" x="18" y="327" width="399" height="17"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="SOQL" id="Gm7-vs-KdX">
+                            <font key="font" metaFont="systemBold" size="14"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YVj-Mk-ptI">
+                        <rect key="frame" x="18" y="128" width="399" height="17"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Apex" id="Bgh-kX-OCX">
+                            <font key="font" metaFont="systemBold" size="14"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="SmT-9M-V0o">
+                        <rect key="frame" x="18" y="192" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="283" id="j0m-mQ-a1j"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Convert query keywords to uppercase" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="rpa-32-r9q">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="enabled" keyPath="values.SoqlColoring" id="ZR0-hd-EoU"/>
+                            <binding destination="354" name="value" keyPath="values.SoqlUppercaseKeywords" id="z3X-2k-Jkb">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="y1g-0n-s0U">
+                        <rect key="frame" x="18" y="103" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="283" id="m5n-JM-cET"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Beep on braces mismatch" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="hfW-Un-Zwu">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="value" keyPath="values.BracesMismatchBeep" id="taE-Vk-Nr2">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="kcg-QY-3Si">
+                        <rect key="frame" x="18" y="214" width="397" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="283" id="Dzo-mj-AyT"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Enable completions popups" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="gSk-qc-yqO">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="354" name="enabled" keyPath="values.SoqlColoring" id="pti-Jj-5u6"/>
+                            <binding destination="354" name="value" keyPath="values.SoqlCompletions" id="Do3-qU-tdr">
+                                <dictionary key="options">
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="kcg-QY-3Si" secondAttribute="trailing" constant="20" symbolic="YES" id="0wI-Tn-qaT"/>
+                    <constraint firstItem="SmT-9M-V0o" firstAttribute="top" secondItem="kcg-QY-3Si" secondAttribute="bottom" constant="6" symbolic="YES" id="1Xq-HC-0Oo"/>
+                    <constraint firstAttribute="trailing" secondItem="YDz-10-l7r" secondAttribute="trailing" constant="20" symbolic="YES" id="308-tM-JHq"/>
+                    <constraint firstAttribute="trailing" secondItem="a72-vu-tIW" secondAttribute="trailing" constant="20" symbolic="YES" id="3aG-yk-Skg"/>
+                    <constraint firstItem="sdA-fY-fqy" firstAttribute="top" secondItem="345" secondAttribute="bottom" constant="6" symbolic="YES" id="5XM-ZY-u0o"/>
+                    <constraint firstItem="345" firstAttribute="top" secondItem="pJl-RQ-OTi" secondAttribute="bottom" constant="8" symbolic="YES" id="68E-P4-eeE"/>
+                    <constraint firstItem="a72-vu-tIW" firstAttribute="top" secondItem="snb-S8-oRC" secondAttribute="bottom" constant="8" symbolic="YES" id="6ef-bY-8Bt"/>
+                    <constraint firstItem="345" firstAttribute="leading" secondItem="pJl-RQ-OTi" secondAttribute="leading" id="70K-6M-wOH"/>
+                    <constraint firstItem="a72-vu-tIW" firstAttribute="top" secondItem="snb-S8-oRC" secondAttribute="bottom" constant="8" symbolic="YES" id="7Ge-iw-EUO"/>
+                    <constraint firstItem="a72-vu-tIW" firstAttribute="leading" secondItem="pJl-RQ-OTi" secondAttribute="leading" id="89K-xZ-zQo"/>
+                    <constraint firstItem="pJl-RQ-OTi" firstAttribute="top" secondItem="344" secondAttribute="top" constant="20" symbolic="YES" id="901-Kf-hlu"/>
+                    <constraint firstItem="snb-S8-oRC" firstAttribute="leading" secondItem="1692" secondAttribute="leading" id="9wI-je-ACR"/>
+                    <constraint firstItem="cX7-EX-NvD" firstAttribute="leading" secondItem="359" secondAttribute="leading" id="BmE-ow-fc3"/>
+                    <constraint firstItem="L8r-v1-FRe" firstAttribute="top" secondItem="SmT-9M-V0o" secondAttribute="bottom" constant="20" symbolic="YES" id="DLw-Xv-QB3"/>
+                    <constraint firstItem="UE6-jo-hRU" firstAttribute="leading" secondItem="L8r-v1-FRe" secondAttribute="trailing" constant="8" symbolic="YES" id="DWg-QJ-Z85"/>
+                    <constraint firstItem="1rW-mR-B3p" firstAttribute="top" secondItem="N4F-3N-8jr" secondAttribute="bottom" constant="8" symbolic="YES" id="Ev4-Tv-0wD"/>
+                    <constraint firstAttribute="bottom" secondItem="359" secondAttribute="bottom" constant="20" symbolic="YES" id="GIB-SB-1Ln"/>
+                    <constraint firstItem="359" firstAttribute="top" secondItem="cX7-EX-NvD" secondAttribute="bottom" constant="12" symbolic="YES" id="HDB-X3-yxi"/>
+                    <constraint firstItem="L8r-v1-FRe" firstAttribute="leading" secondItem="344" secondAttribute="leading" constant="20" symbolic="YES" id="Ifs-6M-Y88"/>
+                    <constraint firstAttribute="trailing" secondItem="snb-S8-oRC" secondAttribute="trailing" constant="20" symbolic="YES" id="KuG-Z7-cAR"/>
+                    <constraint firstItem="cX7-EX-NvD" firstAttribute="centerY" secondItem="1rW-mR-B3p" secondAttribute="centerY" id="Q26-g5-YFq"/>
+                    <constraint firstAttribute="trailing" secondItem="UE6-jo-hRU" secondAttribute="trailing" constant="20" symbolic="YES" id="QB2-aL-CDe"/>
+                    <constraint firstAttribute="trailing" secondItem="359" secondAttribute="trailing" constant="20" symbolic="YES" id="RFK-Bp-E5s"/>
+                    <constraint firstItem="1rW-mR-B3p" firstAttribute="leading" secondItem="344" secondAttribute="leading" constant="20" symbolic="YES" id="SpC-qa-kdG"/>
+                    <constraint firstItem="1686" firstAttribute="leading" secondItem="1692" secondAttribute="leading" id="TGb-jc-jpj"/>
+                    <constraint firstItem="YDz-10-l7r" firstAttribute="leading" secondItem="1686" secondAttribute="leading" id="TlW-xL-1Q5"/>
+                    <constraint firstItem="SmT-9M-V0o" firstAttribute="leading" secondItem="R0v-P7-kcC" secondAttribute="leading" id="UPb-K9-zHJ"/>
+                    <constraint firstItem="1692" firstAttribute="leading" secondItem="sdA-fY-fqy" secondAttribute="leading" id="Vkf-TI-0pQ"/>
+                    <constraint firstItem="1686" firstAttribute="top" secondItem="YDz-10-l7r" secondAttribute="bottom" constant="6" symbolic="YES" id="Y6a-ZF-Za5"/>
+                    <constraint firstItem="y1g-0n-s0U" firstAttribute="top" secondItem="YVj-Mk-ptI" secondAttribute="bottom" constant="8" symbolic="YES" id="am1-ef-gLf"/>
+                    <constraint firstAttribute="trailing" secondItem="345" secondAttribute="trailing" constant="20" symbolic="YES" id="b9J-0c-P1j"/>
+                    <constraint firstItem="1692" firstAttribute="top" secondItem="1686" secondAttribute="bottom" constant="6" symbolic="YES" id="cZi-S2-dFx"/>
+                    <constraint firstAttribute="trailing" secondItem="pJl-RQ-OTi" secondAttribute="trailing" constant="20" symbolic="YES" id="del-1M-O1S"/>
+                    <constraint firstAttribute="trailing" secondItem="1686" secondAttribute="trailing" constant="20" symbolic="YES" id="fG7-4d-ncJ"/>
+                    <constraint firstAttribute="trailing" secondItem="YVj-Mk-ptI" secondAttribute="trailing" constant="20" symbolic="YES" id="fYp-nK-xHk"/>
+                    <constraint firstItem="UE6-jo-hRU" firstAttribute="firstBaseline" secondItem="L8r-v1-FRe" secondAttribute="firstBaseline" id="gHq-Ue-Jqc"/>
+                    <constraint firstItem="345" firstAttribute="leading" secondItem="344" secondAttribute="leading" constant="20" symbolic="YES" id="jS4-MH-E5L"/>
+                    <constraint firstItem="YVj-Mk-ptI" firstAttribute="leading" secondItem="344" secondAttribute="leading" constant="20" symbolic="YES" id="m1Y-gw-xcS"/>
+                    <constraint firstItem="N4F-3N-8jr" firstAttribute="trailing" secondItem="1rW-mR-B3p" secondAttribute="trailing" id="mZx-FB-Fac"/>
+                    <constraint firstItem="y1g-0n-s0U" firstAttribute="leading" secondItem="344" secondAttribute="leading" constant="20" symbolic="YES" id="mn5-Cy-PRE"/>
+                    <constraint firstItem="YVj-Mk-ptI" firstAttribute="top" secondItem="L8r-v1-FRe" secondAttribute="bottom" constant="8" symbolic="YES" id="mrm-fe-dGv"/>
+                    <constraint firstAttribute="trailing" secondItem="R0v-P7-kcC" secondAttribute="trailing" constant="20" symbolic="YES" id="n1h-a3-bcC"/>
+                    <constraint firstItem="N4F-3N-8jr" firstAttribute="leading" secondItem="344" secondAttribute="leading" constant="20" symbolic="YES" id="niN-Cf-cuR"/>
+                    <constraint firstAttribute="trailing" secondItem="SmT-9M-V0o" secondAttribute="trailing" constant="20" symbolic="YES" id="pTF-9p-qvS"/>
+                    <constraint firstAttribute="trailing" secondItem="cX7-EX-NvD" secondAttribute="trailing" constant="20" symbolic="YES" id="prG-KY-aor"/>
+                    <constraint firstItem="R0v-P7-kcC" firstAttribute="leading" secondItem="1692" secondAttribute="leading" id="ptE-mD-5xD"/>
+                    <constraint firstItem="snb-S8-oRC" firstAttribute="top" secondItem="sdA-fY-fqy" secondAttribute="bottom" constant="6" symbolic="YES" id="qdk-5X-OiU"/>
+                    <constraint firstItem="1692" firstAttribute="trailing" secondItem="sdA-fY-fqy" secondAttribute="trailing" id="ru5-Hi-8K1"/>
+                    <constraint firstItem="kcg-QY-3Si" firstAttribute="leading" secondItem="R0v-P7-kcC" secondAttribute="leading" id="skk-03-QhB"/>
+                    <constraint firstItem="kcg-QY-3Si" firstAttribute="top" secondItem="R0v-P7-kcC" secondAttribute="bottom" constant="6" symbolic="YES" id="tJh-hd-NFW"/>
+                    <constraint firstItem="YDz-10-l7r" firstAttribute="top" secondItem="a72-vu-tIW" secondAttribute="bottom" constant="8" symbolic="YES" id="u4Y-IJ-m9m"/>
+                    <constraint firstItem="SmT-9M-V0o" firstAttribute="top" secondItem="kcg-QY-3Si" secondAttribute="bottom" constant="6" symbolic="YES" id="uRq-fZ-lmM"/>
+                    <constraint firstItem="R0v-P7-kcC" firstAttribute="top" secondItem="1692" secondAttribute="bottom" constant="6" symbolic="YES" id="uch-WP-VSD"/>
+                    <constraint firstAttribute="trailing" secondItem="y1g-0n-s0U" secondAttribute="trailing" constant="20" symbolic="YES" id="zBW-dF-x0c"/>
+                </constraints>
+            </view>
+            <point key="canvasLocation" x="-1202.5" y="110.5"/>
+        </window>
+        <userDefaultsController representsSharedInstance="YES" id="354" userLabel="Shared Defaults"/>
+        <customObject id="1677" userLabel="App Delegate" customClass="AppDelegate"/>
+        <customObject id="iTj-eg-Czi" userLabel="OAuthManager" customClass="OAuthMenuManager">
+            <connections>
+                <outlet property="menu" destination="qiJ-Ab-pR7" id="28L-b6-Cdj"/>
+            </connections>
+        </customObject>
+    </objects>
+</document>

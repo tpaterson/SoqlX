@@ -1,4 +1,4 @@
-// Copyright (c) 2006-2015 Simon Fell
+// Copyright (c) 2006-2015,2018,2021 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -19,84 +19,33 @@
 // THE SOFTWARE.
 //
 
-// LoginController and Login.nib make a reusable login window that support
-// the keychain, multiple servers, and differing ways to open the window
 #import <Cocoa/Cocoa.h>
+#import "LoginTargetController.h"
+#import "LoginRowViewItem.h"
 
 @class Credential;
 @class ZKSforceClient;
-@class ZKSoapException;
 @class ZKLoginController;
 
+extern int DEFAULT_API_VERSION;
+
 @protocol ZKLoginControllerDelegate <NSObject>
-@optional
--(void)loginControllerLoginCancelled:(ZKLoginController *)controller;
+@required
 -(void)loginController:(ZKLoginController *)controller loginCompleted:(ZKSforceClient *)client;
--(void)loginController:(ZKLoginController *)controller serverUrlAdded:(NSURL *)url;
--(void)loginController:(ZKLoginController *)controller serverUrlRemoved:(NSURL *)url;
+-(void)loginControllerLoginCancelled:(ZKLoginController *)controller;
 @end
 
-@interface ZKLoginController : NSObject {
-	NSString 		*username;
-	NSString 		*password;
-	NSString 		*server;
-	NSString 		*clientId;
-	NSArray  		*credentials;
-	Credential 		*selectedCredential;
-	ZKSforceClient 	*sforce;
-	NSString		*urlOfNewServer;
-	NSString		*statusText;
-	int				preferedApiVersion;
-	
-	NSWindow 			*modalWindow;
-	id					target;
-	SEL					selector;	
-	IBOutlet NSWindow 	*window;
-	IBOutlet NSButton 	*addButton;
-	IBOutlet NSButton	*delButton;
-	IBOutlet NSWindow	*newUrlWindow;
-	IBOutlet NSProgressIndicator *loginProgress;
-    
-    NSWindow        *tokenWindow;
-    NSString        *apiSecurityToken;
-    
-    NSObject<ZKLoginControllerDelegate> *delegate;
-    NSArray *nibTopLevelObjects;
-}
+@interface ZKLoginController : NSObject<LoginTargetControllerDelegate, LoginRowViewItemDelegate>
++(NSString*)appClientId;
 
-- (ZKSforceClient *)showModalLoginWindow:(id)sender;
-- (ZKSforceClient *)showModalLoginWindow:(id)sender submitIfHaveCredentials:(BOOL)autoSubmit;
+-(void)showLoginSheet:(NSWindow *)modalForWindow;
+-(void)loginWithOAuthToken:(Credential*)cred window:(NSWindow*)modalForWindow;
+-(void)completeOAuthLogin:(NSURL *)oauthCallbackUrl window:(NSWindow*)modalForWindow;
+-(IBAction)cancelLogin:(id)sender;
 
-- (void)showLoginWindow:(id)sender target:(id)target selector:(SEL)selector;
-- (void)showLoginSheet:(NSWindow *)modalForWindow target:(id)target selector:(SEL)selector;
-
-- (IBAction)cancelLogin:(id)sender;
-- (IBAction)login:(id)sender;
-- (IBAction)showAddNewServer:(id)sender;
-- (IBAction)closeAddNewServer:(id)sender;
-- (IBAction)addNewServer:(id)sender;
-- (IBAction)deleteServer:(id)sender;
-
-- (IBAction)loginWithToken:(id)sender;
-- (IBAction)cancelToken:(id)sender;
-- (IBAction)showTokenHelp:(id)sender;
-- (BOOL)hasEnteredToken;
-@property (retain) IBOutlet NSWindow *tokenWindow;
-@property (retain) NSString *apiSecurityToken;
-
-@property (retain) NSString *username;
-@property (retain) NSString *password;
-@property (retain) NSString *server;
-@property (retain) NSString *urlOfNewServer;
-@property (retain) NSString *statusText;
-@property (retain) NSString *clientId;
 @property (assign) int preferedApiVersion;
-@property (assign) NSObject<ZKLoginControllerDelegate> *delegate;
+@property (strong) NSString *controllerId;
 
-- (NSArray *)credentials;
-- (BOOL)canDeleteServer;
-- (void)setClientIdFromInfoPlist;
-- (ZKSforceClient *)performLogin:(ZKSoapException **)error;
-
+@property (weak) NSObject<ZKLoginControllerDelegate> *delegate;
 
 @end

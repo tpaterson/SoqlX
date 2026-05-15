@@ -21,14 +21,23 @@
 
 #import "FieldResizer.h"
 
+static const CGFloat MIN_PANE_SIZE = 100;
 
 @implementation FieldResizer
 
 -(void)splitViewDidResizeSubviews:(NSNotification *)aNotification {
-	double newWidth = [[[splitter subviews] objectAtIndex:0] frame].size.width;
-	NSRect f = [field frame];
-	f.size.width = newWidth - f.origin.x;
-	[field setFrameSize:f.size];
+    double newWidth = splitter.subviews[0].frame.size.width;
+    NSRect f = field.frame;
+    f.size.width = newWidth - f.origin.x;
+    [field setFrameSize:f.size];
+}
+
+-(CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset {
+    return MAX(proposedMin, MIN_PANE_SIZE);
+}
+
+-(BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview {
+    return NO;
 }
 
 @end

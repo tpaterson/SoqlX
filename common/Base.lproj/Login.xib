@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ZKLoginController">
+            <connections>
+                <outlet property="credsController" destination="9CP-15-oYM" id="A0W-yB-k6t"/>
+                <outlet property="loginSheet" destination="lpo-xH-vTX" id="px1-is-EtC"/>
+                <outlet property="state" destination="5fO-2t-xdJ" id="FOb-8I-Zwc"/>
+                <outlet property="tabView" destination="Cuu-Gy-qub" id="OM1-e8-Sb7"/>
+                <outlet property="targetController" destination="JHy-iV-NBO" id="A1m-Fm-kW3"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <userDefaultsController representsSharedInstance="YES" id="33" userLabel="Shared Defaults"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="lpo-xH-vTX" userLabel="OAuth">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="283" y="305" width="386" height="468"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <view key="contentView" verticalHuggingPriority="255" verticalCompressionResistancePriority="444" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="888-mM-JRU">
+                <rect key="frame" x="0.0" y="0.0" width="386" height="379"/>
+                <subviews>
+                    <button identifier="helpButton" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="asF-Da-Ocp">
+                        <rect key="frame" x="18" y="16" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="asF-Da-Ocp" secondAttribute="height" multiplier="1:1" id="yYC-eY-Ias"/>
+                        </constraints>
+                        <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KOM-DE-TTB">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="showLoginHelp:" target="-2" id="Ckt-za-75y"/>
+                        </connections>
+                    </button>
+                    <customView identifier="statusView" placeholderIntrinsicWidth="346" placeholderIntrinsicHeight="64" translatesAutoresizingMaskIntoConstraints="NO" id="cm6-tq-oq6" userLabel="Status Container">
+                        <rect key="frame" x="20" y="53" width="346" height="64"/>
+                        <subviews>
+                            <progressIndicator verticalHuggingPriority="750" maxValue="100" doubleValue="22" displayedWhenStopped="NO" indeterminate="YES" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Om8-X4-spf">
+                                <rect key="frame" x="0.0" y="-1" width="346" height="20"/>
+                                <connections>
+                                    <binding destination="5fO-2t-xdJ" name="animate" keyPath="busy" id="eTb-FQ-kFd"/>
+                                </connections>
+                            </progressIndicator>
+                            <textField identifier="statusText" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bva-Er-Nym" userLabel="Feedback Label">
+                                <rect key="frame" x="-2" y="26" width="350" height="38"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" priority="900" constant="38" id="h84-Jj-LPM"/>
+                                </constraints>
+                                <textFieldCell key="cell" alignment="center" title="Label" id="m63-d4-Fzy">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="5fO-2t-xdJ" name="value" keyPath="statusText" id="8cE-jV-Vlv"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Om8-X4-spf" firstAttribute="leading" secondItem="cm6-tq-oq6" secondAttribute="leading" id="3vv-lx-FkQ"/>
+                            <constraint firstAttribute="trailing" secondItem="bva-Er-Nym" secondAttribute="trailing" id="5JT-EX-RjN"/>
+                            <constraint firstAttribute="bottom" secondItem="Om8-X4-spf" secondAttribute="bottom" id="6cR-RS-fmj"/>
+                            <constraint firstAttribute="trailing" secondItem="Om8-X4-spf" secondAttribute="trailing" id="Uxj-jO-1JJ"/>
+                            <constraint firstItem="Om8-X4-spf" firstAttribute="top" secondItem="bva-Er-Nym" secondAttribute="bottom" priority="111" constant="8" symbolic="YES" id="Z6r-zp-g5L"/>
+                            <constraint firstItem="bva-Er-Nym" firstAttribute="leading" secondItem="cm6-tq-oq6" secondAttribute="leading" id="eOd-Gi-D8Q"/>
+                            <constraint firstItem="bva-Er-Nym" firstAttribute="top" secondItem="cm6-tq-oq6" secondAttribute="top" id="jou-HX-dyC"/>
+                            <constraint firstAttribute="height" constant="64" id="zug-7K-Yc6"/>
+                        </constraints>
+                    </customView>
+                    <tabView identifier="tabView" verticalHuggingPriority="444" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="350" placeholderIntrinsicHeight="230" translatesAutoresizingMaskIntoConstraints="NO" id="Cuu-Gy-qub">
+                        <rect key="frame" x="13" y="115" width="360" height="258"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="nO1-8u-LQm"/>
+                        </constraints>
+                        <font key="font" metaFont="system"/>
+                        <tabViewItems>
+                            <tabViewItem label="Saved Logins" identifier="Saved" id="ShY-ok-ozz">
+                                <view key="view" verticalHuggingPriority="555" verticalCompressionResistancePriority="1" id="SHQ-r0-V54">
+                                    <rect key="frame" x="10" y="33" width="340" height="70"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="750" verticalStackHuggingPriority="750" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="2" verticalCompressionResistancePriority="2" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oOu-Nu-sxK">
+                                            <rect key="frame" x="20" y="61" width="300" height="9"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="LRW-rv-qYI"/>
+                                            </constraints>
+                                        </stackView>
+                                        <button verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="b8d-fE-5dh">
+                                            <rect key="frame" x="262" y="13" width="64" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Edit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JLq-Ap-P9y">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="toggleEditing:" target="9CP-15-oYM" id="tcA-z3-DJs"/>
+                                                <binding destination="9CP-15-oYM" name="hidden" keyPath="hasSavedCredentials" id="vdD-FR-mQf">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="oOu-Nu-sxK" secondAttribute="trailing" constant="20" symbolic="YES" id="TTR-9R-leW"/>
+                                        <constraint firstItem="b8d-fE-5dh" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SHQ-r0-V54" secondAttribute="leading" constant="20" symbolic="YES" id="W2h-vV-jzK"/>
+                                        <constraint firstItem="b8d-fE-5dh" firstAttribute="top" secondItem="oOu-Nu-sxK" secondAttribute="bottom" constant="20" symbolic="YES" id="ZNB-8i-Hza"/>
+                                        <constraint firstAttribute="trailing" secondItem="b8d-fE-5dh" secondAttribute="trailing" constant="20" symbolic="YES" id="at9-GE-0Ll"/>
+                                        <constraint firstItem="oOu-Nu-sxK" firstAttribute="top" secondItem="SHQ-r0-V54" secondAttribute="top" id="dOF-3o-29S"/>
+                                        <constraint firstItem="oOu-Nu-sxK" firstAttribute="leading" secondItem="SHQ-r0-V54" secondAttribute="leading" constant="20" symbolic="YES" id="v5S-be-iPK"/>
+                                        <constraint firstAttribute="bottom" secondItem="b8d-fE-5dh" secondAttribute="bottom" constant="20" symbolic="YES" id="ylj-1O-RnS"/>
+                                    </constraints>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="New Login" identifier="New" id="lGG-Mq-9pO">
+                                <view key="view" horizontalHuggingPriority="555" verticalHuggingPriority="555" verticalCompressionResistancePriority="1" placeholderIntrinsicWidth="300" placeholderIntrinsicHeight="50" id="Xor-Za-ZEG">
+                                    <rect key="frame" x="10" y="33" width="340" height="212"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textField identifier="instructions" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="SWv-7D-Ok7" userLabel="instructions">
+                                            <rect key="frame" x="18" y="180" width="304" height="32"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="300" id="Pvq-IK-B8V"/>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ogG-i1-1c8"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" alignment="center" title="Click one of server buttons below to start the login/authorization process." id="OZd-Rp-34y" userLabel="instructions">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <stackView identifier="ServersStack" distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalHuggingPriority="251" verticalCompressionResistancePriority="2" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3j4-Fx-cwN">
+                                            <rect key="frame" x="20" y="172" width="300" height="0.0"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="Jol-xU-4pO"/>
+                                            </constraints>
+                                        </stackView>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9hf-5v-Ee3">
+                                            <rect key="frame" x="262" y="124" width="64" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Edit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6MW-1l-EHw">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="toggleEditing:" target="JHy-iV-NBO" id="8jr-qr-u1X"/>
+                                            </connections>
+                                        </button>
+                                        <customView identifier="addUrlVIew" wantsLayer="YES" horizontalHuggingPriority="10" translatesAutoresizingMaskIntoConstraints="NO" id="g0K-e3-zq2" userLabel="AddUrlView">
+                                            <rect key="frame" x="20" y="20" width="300" height="91"/>
+                                            <subviews>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ihk-7s-l1f">
+                                                    <rect key="frame" x="-2" y="75" width="304" height="16"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Custom Domain" id="Aqe-i7-2Uc">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField horizontalHuggingPriority="10" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sUj-sS-4fW">
+                                                    <rect key="frame" x="-2" y="22" width="209" height="16"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="https://domain.my.salesforce.com" placeholderString="populatedDomain" id="agD-iB-Y88">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <connections>
+                                                        <binding destination="3mk-Mc-suC" name="value" keyPath="populatedDomain" id="FTE-iK-mPb"/>
+                                                    </connections>
+                                                </textField>
+                                                <textField horizontalHuggingPriority="200" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nk4-yc-Yya">
+                                                    <rect key="frame" x="0.0" y="46" width="300" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="qVc-Hj-6gb"/>
+                                                    </constraints>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="domain" drawsBackground="YES" id="LA7-2k-NbN">
+                                                        <font key="font" usesAppearanceFont="YES"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        <allowedInputSourceLocales>
+                                                            <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                                        </allowedInputSourceLocales>
+                                                    </textFieldCell>
+                                                    <connections>
+                                                        <action selector="addNewUrl:" target="JHy-iV-NBO" id="0ql-h5-gfe"/>
+                                                        <binding destination="3mk-Mc-suC" name="value" keyPath="domain" id="E4P-3P-pnw">
+                                                            <dictionary key="options">
+                                                                <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                            </dictionary>
+                                                        </binding>
+                                                    </connections>
+                                                </textField>
+                                                <button identifier="addUrlBtn" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mEx-bA-bo2">
+                                                    <rect key="frame" x="287" y="19" width="13" height="20"/>
+                                                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sx2-tj-NGx">
+                                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="addNewUrl:" target="JHy-iV-NBO" id="yby-Re-5Jb"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="mEx-bA-bo2" secondAttribute="bottom" constant="20" symbolic="YES" id="8tZ-37-fc0"/>
+                                                <constraint firstItem="mEx-bA-bo2" firstAttribute="top" secondItem="Nk4-yc-Yya" secondAttribute="bottom" constant="8" symbolic="YES" id="AfU-hH-TZ1"/>
+                                                <constraint firstItem="mEx-bA-bo2" firstAttribute="trailing" secondItem="Nk4-yc-Yya" secondAttribute="trailing" id="B2U-rH-MLw"/>
+                                                <constraint firstItem="sUj-sS-4fW" firstAttribute="leading" secondItem="g0K-e3-zq2" secondAttribute="leading" id="H66-1a-1pY"/>
+                                                <constraint firstAttribute="trailing" secondItem="Ihk-7s-l1f" secondAttribute="trailing" id="I7h-dy-cX4"/>
+                                                <constraint firstItem="Ihk-7s-l1f" firstAttribute="top" secondItem="g0K-e3-zq2" secondAttribute="top" id="QPU-IN-6sW"/>
+                                                <constraint firstItem="Nk4-yc-Yya" firstAttribute="leading" secondItem="g0K-e3-zq2" secondAttribute="leading" id="QkR-4z-vDr"/>
+                                                <constraint firstAttribute="trailing" secondItem="Nk4-yc-Yya" secondAttribute="trailing" id="QwS-TV-twd"/>
+                                                <constraint firstItem="mEx-bA-bo2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sUj-sS-4fW" secondAttribute="trailing" constant="8" symbolic="YES" id="UYd-4m-vmG"/>
+                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="sUj-sS-4fW" secondAttribute="bottom" constant="4" id="XHs-6F-1cM"/>
+                                                <constraint firstItem="Nk4-yc-Yya" firstAttribute="top" secondItem="Ihk-7s-l1f" secondAttribute="bottom" constant="8" symbolic="YES" id="YTp-Nh-iiq"/>
+                                                <constraint firstItem="sUj-sS-4fW" firstAttribute="top" secondItem="Nk4-yc-Yya" secondAttribute="bottom" constant="8" symbolic="YES" id="rva-3i-jmx"/>
+                                                <constraint firstItem="Ihk-7s-l1f" firstAttribute="leading" secondItem="g0K-e3-zq2" secondAttribute="leading" id="wSl-vK-91v"/>
+                                            </constraints>
+                                        </customView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="9hf-5v-Ee3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Xor-Za-ZEG" secondAttribute="leading" constant="20" symbolic="YES" id="0ir-Dd-cqh"/>
+                                        <constraint firstItem="SWv-7D-Ok7" firstAttribute="leading" secondItem="Xor-Za-ZEG" secondAttribute="leading" constant="20" symbolic="YES" id="6fy-WM-5Lk"/>
+                                        <constraint firstAttribute="trailing" secondItem="g0K-e3-zq2" secondAttribute="trailing" constant="20" symbolic="YES" id="7i0-O5-lGc"/>
+                                        <constraint firstItem="9hf-5v-Ee3" firstAttribute="top" secondItem="3j4-Fx-cwN" secondAttribute="bottom" constant="20" symbolic="YES" id="ALO-NA-TBn"/>
+                                        <constraint firstAttribute="bottom" secondItem="9hf-5v-Ee3" secondAttribute="bottom" priority="333" constant="20" symbolic="YES" identifier="editToBottom" id="BG3-35-4PV"/>
+                                        <constraint firstAttribute="trailing" secondItem="3j4-Fx-cwN" secondAttribute="trailing" constant="20" symbolic="YES" id="D1B-uz-udn"/>
+                                        <constraint firstAttribute="bottom" secondItem="g0K-e3-zq2" secondAttribute="bottom" constant="20" symbolic="YES" id="HYD-oB-szl"/>
+                                        <constraint firstItem="g0K-e3-zq2" firstAttribute="top" secondItem="9hf-5v-Ee3" secondAttribute="bottom" priority="900" constant="20" symbolic="YES" identifier="editToAddUrl" id="JcD-vm-PHX"/>
+                                        <constraint firstAttribute="trailing" secondItem="9hf-5v-Ee3" secondAttribute="trailing" constant="20" symbolic="YES" id="Kmx-kR-Pzd"/>
+                                        <constraint firstItem="g0K-e3-zq2" firstAttribute="leading" secondItem="Xor-Za-ZEG" secondAttribute="leading" constant="20" symbolic="YES" id="P96-rI-hqf"/>
+                                        <constraint firstItem="SWv-7D-Ok7" firstAttribute="top" secondItem="Xor-Za-ZEG" secondAttribute="top" id="Y6C-Kk-gcM"/>
+                                        <constraint firstAttribute="trailing" secondItem="SWv-7D-Ok7" secondAttribute="trailing" constant="20" symbolic="YES" id="ZaB-qf-KVy"/>
+                                        <constraint firstItem="3j4-Fx-cwN" firstAttribute="top" secondItem="SWv-7D-Ok7" secondAttribute="bottom" constant="8" symbolic="YES" id="fLY-YQ-YHd"/>
+                                        <constraint firstItem="3j4-Fx-cwN" firstAttribute="leading" secondItem="Xor-Za-ZEG" secondAttribute="leading" constant="20" symbolic="YES" id="utT-1R-Nr8"/>
+                                    </constraints>
+                                </view>
+                            </tabViewItem>
+                        </tabViewItems>
+                    </tabView>
+                    <stackView distribution="equalSpacing" orientation="horizontal" alignment="firstBaseline" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9EX-6N-R4Y">
+                        <rect key="frame" x="296" y="20" width="70" height="21"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wa9-IR-whn">
+                                <rect key="frame" x="-6" y="-7" width="82" height="32"/>
+                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4eR-ct-Af8">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="cancelLogin:" target="-2" id="7NO-zG-fAA"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <visibilityPriorities>
+                            <integer value="1000"/>
+                        </visibilityPriorities>
+                        <customSpacing>
+                            <real value="3.4028234663852886e+38"/>
+                        </customSpacing>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="9EX-6N-R4Y" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="asF-Da-Ocp" secondAttribute="trailing" constant="12" id="67V-dn-tGA"/>
+                    <constraint firstAttribute="bottom" secondItem="9EX-6N-R4Y" secondAttribute="bottom" constant="20" symbolic="YES" id="KUI-Sw-10l"/>
+                    <constraint firstAttribute="trailing" secondItem="cm6-tq-oq6" secondAttribute="trailing" constant="20" symbolic="YES" id="QRH-UP-pdr"/>
+                    <constraint firstItem="asF-Da-Ocp" firstAttribute="top" secondItem="cm6-tq-oq6" secondAttribute="bottom" constant="12" symbolic="YES" id="TCc-Vx-se3"/>
+                    <constraint firstAttribute="bottom" secondItem="asF-Da-Ocp" secondAttribute="bottom" constant="20" symbolic="YES" id="UPM-Zo-SW8"/>
+                    <constraint firstItem="asF-Da-Ocp" firstAttribute="leading" secondItem="888-mM-JRU" secondAttribute="leading" constant="20" symbolic="YES" id="beq-iQ-KkE"/>
+                    <constraint firstItem="Cuu-Gy-qub" firstAttribute="top" secondItem="888-mM-JRU" secondAttribute="top" constant="12" symbolic="YES" id="fbZ-zZ-lOf"/>
+                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="hCc-cS-hXW"/>
+                    <constraint firstAttribute="trailing" secondItem="Cuu-Gy-qub" secondAttribute="trailing" constant="20" symbolic="YES" id="iR1-uT-mpd"/>
+                    <constraint firstItem="cm6-tq-oq6" firstAttribute="leading" secondItem="888-mM-JRU" secondAttribute="leading" constant="20" symbolic="YES" id="psP-PO-BuP"/>
+                    <constraint firstAttribute="trailing" secondItem="9EX-6N-R4Y" secondAttribute="trailing" constant="20" symbolic="YES" id="vsx-cv-b8j"/>
+                    <constraint firstItem="cm6-tq-oq6" firstAttribute="top" secondItem="Cuu-Gy-qub" secondAttribute="bottom" constant="8" symbolic="YES" id="yNG-L5-Rik"/>
+                    <constraint firstItem="Cuu-Gy-qub" firstAttribute="leading" secondItem="888-mM-JRU" secondAttribute="leading" constant="20" symbolic="YES" id="ycV-aH-fue"/>
+                </constraints>
+            </view>
+            <point key="canvasLocation" x="-448" y="-70"/>
+        </window>
+        <viewController id="PQK-UD-2uk" userLabel="Popover View Controller"/>
+        <popover behavior="t" id="A62-aq-VwG">
+            <connections>
+                <outlet property="contentViewController" destination="PQK-UD-2uk" id="7oE-ng-BqG"/>
+            </connections>
+        </popover>
+        <customObject id="9CP-15-oYM" customClass="CredentialsController">
+            <connections>
+                <outlet property="stack" destination="oOu-Nu-sxK" id="YGz-nV-cFK"/>
+            </connections>
+        </customObject>
+        <customObject id="5fO-2t-xdJ" customClass="LoginControllerState">
+            <connections>
+                <outlet property="statusHeightConstraint" destination="zug-7K-Yc6" id="oJn-g9-18k"/>
+            </connections>
+        </customObject>
+        <customObject id="JHy-iV-NBO" customClass="LoginTargetController">
+            <connections>
+                <outlet property="addUrlView" destination="g0K-e3-zq2" id="7op-63-hrw"/>
+                <outlet property="editConstraint" destination="BG3-35-4PV" id="uXP-8z-dex"/>
+                <outlet property="stack" destination="3j4-Fx-cwN" id="9H2-ww-vdk"/>
+                <outlet property="state" destination="3mk-Mc-suC" id="HxU-CL-Z76"/>
+            </connections>
+        </customObject>
+        <customObject id="3mk-Mc-suC" customClass="LoginTargetControllerState"/>
+    </objects>
+    <resources>
+        <image name="NSAddTemplate" width="11" height="11"/>
+    </resources>
+</document>

@@ -20,8 +20,8 @@
 //
 
 #import "ZKDescribe_Reporting.h"
-#import "zkPicklistEntry.h"
-#import "zkChildRelationship.h"
+#import <ZKSforce/ZKPicklistEntry.h>
+#import <ZKSforce/ZKChildRelationship.h>
 
 
 @implementation ZKDescribeField (Reporting)
@@ -97,10 +97,14 @@
 @implementation DescribeListDataSource (Reporting)
 
 - (BOOL)hasAllDescribesRelatedTo:(NSString *)sobjectType {
-    if (![self hasDescribe:sobjectType]) return NO;
-	ZKDescribeSObject *desc = [self describe:sobjectType];
-    for(NSString *t in [desc namesOfAllReferencedObjects]) {
-		if (![self hasDescribe:t]) return NO;
+    if (![self hasDescribe:sobjectType]) {
+        return NO;
+    }
+	ZKDescribeSObject *desc = [self cachedDescribe:sobjectType];
+    for (NSString *t in [desc namesOfAllReferencedObjects]) {
+        if (![self hasDescribe:t]) {
+            return NO;
+        }
 	}
 	return YES;
 }

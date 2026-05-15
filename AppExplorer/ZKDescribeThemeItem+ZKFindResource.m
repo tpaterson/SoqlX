@@ -54,25 +54,23 @@
 
 @implementation ZKDescribeIcon (ZKFetch)
 -(void)fetchIconUsingSessionId:(NSString *)sid whenCompleteDo:(void (^)(NSImage *))completeBlock {
-    static NSOperationQueue *queue = nil;
-    if (queue == nil) {
-        queue = [[NSOperationQueue alloc] init];
-        [queue setName:@"image queue"];
-        queue.maxConcurrentOperationCount = 2;
+    static NSURLSession *s = nil;
+    if (s == nil) {
+        NSURLSessionConfiguration *cfg = [NSURLSessionConfiguration defaultSessionConfiguration];
+        cfg.HTTPMaximumConnectionsPerHost = 2;
+        cfg.HTTPShouldUsePipelining = NO;
+        cfg.HTTPShouldSetCookies = NO;
+        s = [NSURLSession sessionWithConfiguration:cfg];
     }
     
     NSURL *theUrl = [NSURL URLWithString:[self url]];
-    [queue addOperationWithBlock:^{
-        NSMutableURLRequest *r = [[[NSMutableURLRequest alloc] initWithURL:theUrl] autorelease];
-        [r setCachePolicy:NSURLCacheStorageAllowed];
-        [r setHTTPShouldHandleCookies:NO];
-        [r setHTTPShouldUsePipelining:NO];
-        [r setHTTPMethod:@"GET"];
-        NSHTTPURLResponse *res;
-        NSError *err;
-        NSData *d = [NSURLConnection sendSynchronousRequest:r returningResponse:&res error:&err];
+    NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:theUrl];
+    [r setHTTPMethod:@"GET"];
+    [[[NSURLSession sharedSession] dataTaskWithRequest:r
+                                     completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSHTTPURLResponse *res = (NSHTTPURLResponse *)response;
         if ([res statusCode] == 200) {
-            NSImage *i = [[[NSImage alloc] initWithData:d] autorelease];
+            NSImage *i = [[NSImage alloc] initWithData:data];
             if (i != nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completeBlock(i);
@@ -81,7 +79,7 @@
             }
         }
         NSLog(@"failed to load image from url %@", theUrl);
-    }];
+    }] resume];
 }
 
 @end

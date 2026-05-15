@@ -28,38 +28,40 @@
 @class PlusMinusWidget;
 
 @interface SObjectBox : NSObject {
-	SchemaView			*view;
-	ZKDescribeSObject	*sobject;
-	SObjectBoxViewMode	viewMode;
-	NSMutableDictionary *titleAttributes;
-	NSDictionary		*fieldAttributes;
-	NSArray				*fieldsToDisplay;
-	NSDictionary		*fieldRects;
-    NSColor 			*borderColor;
-    NSColor				*gradientStartColor;
-    NSColor 			*gradientEndColor;
-	NSTrackingRectTag	tagMainRect;
-	NSSize				size;
-	NSPoint				origin;
-	BOOL				highlight;
-	PlusMinusWidget		*plusWidget;
-	PlusMinusWidget		*minusWidget;
-	
-	ZKDescribeSObject       *includeFksTo;
+    SchemaView           *view;
+    ZKDescribeSObject    *sobject;
+    SObjectBoxViewMode    viewMode;
+    NSDictionary         *titleAttributes;
+    NSDictionary         *fieldAttributes;
+    NSArray              *fieldsToDisplay;
+    NSDictionary         *fieldRects;
+    NSColor              *borderColor;
+    NSColor              *gradientStartColor;
+    NSColor              *gradientEndColor;
+    NSTrackingRectTag     tagMainRect;
+    NSSize                size;
+    NSPoint               origin;
+    BOOL                  highlight;
+    PlusMinusWidget      *plusWidget;
+    PlusMinusWidget      *minusWidget;
+    
+    ZKDescribeSObject       *includeFksTo;
     NSObject<IconProvider>  *iconProvider;
 }
 
--(id)initWithFrame:(NSRect)frame andView:(SchemaView *)v;
+-(instancetype)initWithFrame:(NSRect)frame andView:(SchemaView *)v NS_DESIGNATED_INITIALIZER;
+-(instancetype)init NS_UNAVAILABLE;
 
-@property (retain) ZKDescribeSObject *sobject;
+@property (readonly) SchemaView *view;
+@property (strong) ZKDescribeSObject *sobject;
 @property (assign) SObjectBoxViewMode viewMode;
-@property (retain) NSColor *color;
-@property (retain) ZKDescribeSObject *includeFksTo;
-@property (retain) NSObject<IconProvider> *iconProvider;
+@property (strong) NSColor *color;
+@property (strong) ZKDescribeSObject *includeFksTo;
+@property (strong) NSObject<IconProvider> *iconProvider;
 
--(BOOL)isHighlighted;
--(NSSize)size;
--(NSPoint)centerPoint;
+@property (getter=isHighlighted, readonly) BOOL highlighted;
+@property (readonly) NSSize size;
+@property (readonly) NSPoint centerPoint;
 
 @property (assign) NSPoint origin;
 
@@ -68,7 +70,7 @@
 -(void)drawRect:(NSRect)rect;
 -(void)mouseDown:(NSEvent *)event;
 -(void)mouseUp:(NSEvent *)event;
--(NSArray *)fieldsToDisplay;
+@property (readonly, copy) NSArray *fieldsToDisplay;
 -(NSRect)rectOfFieldPaddedToEdges:(NSString *)fieldName;
 
 @end

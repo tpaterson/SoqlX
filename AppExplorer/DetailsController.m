@@ -22,6 +22,7 @@
 #import "DetailsController.h"
 #import "NSWindow_additions.h"
 #import "NSTableView_additions.h"
+#import "DataSources.h"
 
 static NSString *SHOWING_DETAILS = @"details";
 
@@ -34,33 +35,31 @@ static NSString *SHOWING_DETAILS = @"details";
     return paths;
 }
 
--(void)dealloc {
-    [dataSourceRef release];
-    [super dealloc];
-}
 
 -(NSString *)windowVisiblePrefName {
     return SHOWING_DETAILS;
 }
 
 -(NSString *)title {
-	if ([self dataSource] == nil) return @"Details";
-	return [[self dataSource] description];
+    if ([self dataSource] == nil) return @"Details";
+    return [self dataSource].description;
 }
 
--(NSObject *)dataSource {
-	return [detailsTable dataSource];
+-(DetailDataSource *)dataSource {
+    return detailsTable.dataSource;
 }
 
--(void)setDataSource:(NSObject<NSTableViewDataSource> *)aValue {
-    [dataSourceRef autorelease];
-    dataSourceRef = [aValue retain];
-	[detailsTable setDataSource:aValue];
+-(void)setDataSource:(DetailDataSource *)aValue {
+    dataSourceRef = aValue;
+    detailsTable.dataSource = aValue;
+    aValue.onChange = ^void(DetailDataSource*ds) {
+        [self->detailsTable reloadData];
+    };
 }
 
 - (void)setIcon:(NSImage *)image {
-    [[detailsTable window] setRepresentedURL:[NSURL fileURLWithPath:self.title]];
-    [[[detailsTable window] standardWindowButton:NSWindowDocumentIconButton] setImage:image];
+    detailsTable.window.representedURL = [NSURL fileURLWithPath:self.title];
+    [detailsTable.window standardWindowButton:NSWindowDocumentIconButton].image = image;
 }
 
 - (IBAction) copy:(id)sender {

@@ -1,4 +1,4 @@
-// Copyright (c) 2006-2008,2013 Simon Fell
+// Copyright (c) 2006-2008,2013,2021 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -22,39 +22,30 @@
 #import <Cocoa/Cocoa.h>
 #include <Security/Security.h>
 
-
 @interface Credential : NSObject {
-	NSString			*server;
-	NSString			*username;
-	SecKeychainItemRef	keychainItem;
+    NSURL               *server;
+    NSString            *username;
+    SecKeychainItemRef   keychainItem;
 }
 
-+ (NSArray *)credentialsForServer:(NSString *)protocolAndServer;
-+ (NSArray *)sortedCredentialsForServer:(NSString *)protocolAndServer;
++ (NSArray<Credential*> *)credentials;
++ (NSArray<Credential*> *)credentialsInMruOrder;
 
-+ (id)forServer:(NSString *)server username:(NSString *)un keychainItem:(SecKeychainItemRef)kcItem;
-+ (id)createCredentialForServer:(NSString *)protocolAndServer username:(NSString *)un password:(NSString *)pwd;
++ (instancetype)createCredential:(NSURL *)server username:(NSString *)un refreshToken:(NSString *)tkn;
 
-- (id)initForServer:(NSString *)server username:(NSString *)un keychainItem:(SecKeychainItemRef)kcItem;
+- (instancetype)initForServer:(NSURL *)server username:(NSString *)un keychainItem:(SecKeychainItemRef)kcItem NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
 
-- (NSString *)server;
-- (NSString *)username;
-- (NSString *)password;
-- (NSString *)comment;
-- (NSString *)creator;
-- (BOOL)canReadPasswordWithoutPrompt;
+@property (readonly) NSURL    *server;
+@property (readonly) NSString *username;
+@property (readonly) NSString *token;
 
-- (void)setServer:(NSString *)newServer;
-- (void)setUsername:(NSString *)newUsername;
-- (void)setPassword:(NSString *)newPassword;
-- (void)setComment:(NSString *)newComment;
-- (void)setCreator:(NSString *)newCreator;
+-(OSStatus)updateToken:(NSString *)token;
+-(OSStatus)deleteEntry;
 
-- (void)removeFromKeychain;
-- (OSStatus)update:(NSString *)username password:(NSString *)password;
 @end
 
 @interface NSURL (ZKKeychain)
-- (SecProtocolType)SecProtocolType;
-- (CFTypeRef)SecAttrProtocol;
+@property (readonly) NSString *friendlyHostLabel;
+@property (readonly) BOOL isStandardEndpoint;
 @end

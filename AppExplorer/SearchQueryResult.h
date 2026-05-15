@@ -19,7 +19,9 @@
 // THE SOFTWARE.
 //
 
-#import "zkQueryResult.h"
+#import <ZKSforce/ZKQueryResult.h>
+
+@class ZKSearchResult;
 
 @protocol IsSearchQueryResult <NSObject>
 // this is a marker protocol to make it easier to distingush search results
@@ -33,6 +35,6 @@
 @interface SearchQueryResult : ZKQueryResult <IsSearchQueryResult> {
 }
 
-+(id)searchQueryResults:(NSArray *)searchResults;
++(instancetype)searchQueryResults:(ZKSearchResult *)searchResults;
 
 @end

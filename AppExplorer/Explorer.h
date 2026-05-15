@@ -1,4 +1,4 @@
-// Copyright (c) 2006-2012 Simon Fell
+// Copyright (c) 2006-2012,2018 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -23,7 +23,7 @@
 #import "DataSources.h"
 #import "SchemaController.h"
 #import "StandAloneTableHeaderView.h"
-#import "zkSforceClient.h"
+#import <ZKSforce/ZKSforceClient.h>
 #import "EditableQueryResultWrapper.h"
 #import "QueryListController.h"
 #import "ZKLoginController.h"
@@ -36,39 +36,37 @@
 @class ZKQueryResult;
 @class QueryResultTable;
 @class ApexController;
+@class ZKTextView;
 
-@interface Explorer : NSObject<EditableQueryResultWrapperDelegate, NSWindowDelegate, NSTabViewDelegate, QueryTextListViewDelegate, ZKLoginControllerDelegate, ZKBaseClientDelegate>
+@interface Explorer : NSObject<EditableQueryResultWrapperDelegate, NSWindowDelegate, NSTabViewDelegate, QueryTextListViewDelegate, ZKLoginControllerDelegate, ZKBaseClientDelegate, DescriberDelegate>
 {
-	// old world order, needs modernizing
-    IBOutlet NSOutlineView			*describeList;
-    IBOutlet NSTableView			*rootTableView;
-	IBOutlet NSTableView			*childTableView;
-    IBOutlet NSTextView			    *soql;	
-	IBOutlet NSMenu                 *soqlContextMenu;
-	IBOutlet NSProgressIndicator	*progress;
-	IBOutlet NSWindow				*myWindow;
-	IBOutlet NSTabView				*soqlSchemaTabs;
-	IBOutlet NSSplitView			*vertSplitView;
-	IBOutlet NSSplitView			*soqlTextSplitView;
-	IBOutlet StandAloneTableHeaderView	*soqlHeader;
-	
-	ZKSforceClient					*sforce;
-	DescribeListDataSource			*descDataSource;
+    // old world order, needs modernizing
+    IBOutlet NSOutlineView          *describeList;
+    IBOutlet NSTableView            *rootTableView;
+    IBOutlet NSTableView            *childTableView;
+    IBOutlet ZKTextView             *soql;
+    IBOutlet NSMenu                 *soqlContextMenu;
+    IBOutlet NSProgressIndicator    *progress;
+    IBOutlet NSWindow               *myWindow;
+    IBOutlet NSTabView              *soqlSchemaTabs;
+    IBOutlet NSSplitView            *vertSplitView;
+    IBOutlet NSSplitView            *soqlTextSplitView;
+    IBOutlet StandAloneTableHeaderView    *soqlHeader;
+    
+    ZKSforceClient                  *sforce;
+    DescribeListDataSource          *descDataSource;
 
-	QueryResultTable				*rootResults;
-	QueryResultTable				*childResults;
-	CGFloat							uncollapsedDividerPosition;
-	
-	ZKLoginController 				*loginController;
-	IBOutlet SchemaController		*schemaController;
-	IBOutlet DetailsController		*detailsController;
-	IBOutlet QueryListController	*queryListController;
-	IBOutlet ApexController			*apexController;
-	
-	// new world order, uses binding
-	NSString						*statusText;
+    CGFloat                         uncollapsedDividerPosition;
+    
+    IBOutlet SchemaController       *schemaController;
+    IBOutlet DetailsController      *detailsController;
+    IBOutlet QueryListController    *queryListController;
+    IBOutlet ApexController         *apexController;
+    
+    // new world order, uses binding
+    NSString                        *statusText;
     NSString                        *apiCallCountText;
-	BOOL							schemaViewIsActive;
+    BOOL                            schemaViewIsActive;
     
     // generate query with specific fields by doubleclicking
     NSMutableArray                  *selectedFields;
@@ -77,7 +75,6 @@
 
 - (IBAction)showLogin:(id)sender;
 - (IBAction)closeLoginPanelIfOpen:(id)sender;
-- (IBAction)showInBrowser:(id)sender;
 - (IBAction)executeQuery:(id)sender;
 - (IBAction)executeQueryAll:(id)sender;
 - (IBAction)queryMore:(id)sender;
@@ -85,30 +82,55 @@
 - (IBAction)describeItemClicked:(id)sender;
 - (IBAction)generateReportForSelection:(id)sender;
 - (IBAction)queryResultDoubleClicked:(id)sender;
-- (IBAction)showSelectedIdFronRootInBrowser:(id)sender;
-- (IBAction)showSelectedIdFronChildInBrowser:(id)sender;
-- (IBAction)saveQueryResults:(id)sender;
-- (IBAction)deleteSelectedRow:(id)sender;
 - (IBAction)deleteCheckedRows:(id)sender;
 - (IBAction)filterSObjectListView:(id)sender;
 - (IBAction)updateDetailsRecentSelection:(id)sender;
+- (IBAction)refreshMetadata:(id)sender;
 
-@property (retain) NSString *statusText;
-@property (retain) NSString *apiCallCountText;
+// If not nil the soql query is asocicated with a file. i.e. it was loaded from, or saved to.
+@property (strong) NSURL *queryFilename;
+@property (strong) NSURL *apexFilename;
+@property (readonly) NSString *titleUserInfo;
+-(void)save:(id)sender;
+-(void)saveQueryResults:(id)sender;
+-(void)open:(id)sender;
+-(void)load:(NSURL *)url;
+
+@property (strong) NSString *statusText;
+@property (strong) NSString *apiCallCountText;
 @property (assign) BOOL schemaViewIsActive;
+@property (strong) NSString *selectedTabViewIdentifier;
 
-@property (retain) IBOutlet NSSegmentedControl *detailsRecentSelector;
+@property (strong) IBOutlet NSSegmentedControl *soqlSchemaApexSelector;
+@property (strong) IBOutlet NSSegmentedControl *detailsRecentSelector;
 
-- (BOOL)isLoggedIn;
-- (BOOL)hasSelectedForDelete;
-- (BOOL)canQueryMore;
-- (NSArray *)SObjects;
-- (DescribeListDataSource *)describeDataSource;
-- (ZKDescribeSObject *)selectedSObject;
+@property (readonly) ZKLoginController *loginController;
+-(void)completeOAuthLogin:(NSURL *)oauthCallbackUrl;
+-(void)loginWithOAuthToken:(Credential*)cred;
+
+@property (readonly) BOOL loginSheetIsOpen;
+@property (getter=isLoggedIn, readonly) BOOL loggedIn;
+
+@property (readonly) BOOL hasSelectedForDelete;
+@property (readonly) BOOL canQueryMore;
+@property (readonly, copy) NSArray *SObjects;
+@property (readonly, strong) DescribeListDataSource *describeDataSource;
+@property (readonly, strong) NSString *selectedSObjectName;
 - (void)updateProgress:(BOOL)show;
 
+@property (strong) QueryResultTable *rootResults;
+@property (strong) QueryResultTable *childResults;
+
+@property BOOL isQuerying;
+@property BOOL isEditing;
+
 - (void)dataChangedOnObject:(ZKSObject *)anObject field:(NSString *)fieldName value:(id)newValue;
-- (void)updateQueryTextFontSize:(id)sender;
+- (void)changeEditFont:(id)sender;
+
+// initializes the explorer from this already existing client instance. Assumes that
+// it has already sucesfully authenticated.
+- (void)useClient:(ZKSforceClient *)client;
+
+@property (readonly) ZKSforceClient *sforce;
+
 @end
-
-

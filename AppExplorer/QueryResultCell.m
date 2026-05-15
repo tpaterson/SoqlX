@@ -1,4 +1,4 @@
-// Copyright (c) 2008 Simon Fell
+// Copyright (c) 2008,2018 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -20,45 +20,35 @@
 //
 
 #import "QueryResultCell.h"
-#import "ZKQueryResult.h"
-
-@interface QueryResultCell ()
--(void)initProperties;
-@end 
+#import <ZKSforce/ZKQueryResult.h>
 
 @implementation QueryResultCell
 
-- (id)initTextCell:(NSString *)txt {
-	self = [super initTextCell:txt];
-	[self initProperties];
-	return self;
-}
+static NSImage *magnifyingGlassImage;
+static NSButtonCell *magnifyingGlassCell;
+static NSDictionary *textAttrs;
 
-- (void)dealloc {
-	[myImage release];
-	[myTextAttrs release];
-	[super dealloc];
-}
 
-- (void)initProperties {
-	myImage = [[NSImage imageNamed:NSImageNameRevealFreestandingTemplate] retain];
-	myTextAttrs = [[NSDictionary dictionaryWithObjectsAndKeys:[NSFont userFontOfSize:10.0], NSFontAttributeName, nil] retain];
-}
-
-- (id)copyWithZone:(NSZone *)z {
-	QueryResultCell *rhs = [super copyWithZone:z];
-	[self initProperties];
-	return rhs;
++(void)initialize {
+    magnifyingGlassImage = [NSImage imageNamed:NSImageNameRevealFreestandingTemplate];
+    magnifyingGlassCell = [[NSButtonCell alloc] initImageCell:magnifyingGlassImage];
+    magnifyingGlassCell.bezeled = NO;
+    magnifyingGlassCell.bordered = NO;
+    textAttrs = @{NSFontAttributeName: [NSFont userFontOfSize:10.0],
+                  NSForegroundColorAttributeName: [NSColor textColor] };
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
-	ZKQueryResult *qr = [self objectValue];
-	if ([qr size] == 0) return;
+    ZKQueryResult *qr = self.objectValue;
+    if ([qr size] == 0) return;
     NSPoint cellPoint = cellFrame.origin;
-    [controlView lockFocus];
-	[myImage compositeToPoint:NSMakePoint(cellPoint.x+2, cellPoint.y+16) operation:NSCompositeSourceOver fraction:0.6];
-    [[NSString stringWithFormat:@"%d row%@", [qr size], [qr size] > 1 ? @"s" : @""] drawAtPoint:NSMakePoint(cellPoint.x+20, cellPoint.y+1) withAttributes:myTextAttrs];
-    [controlView unlockFocus];
+    NSRect dstRect = NSMakeRect(cellPoint.x + 2,
+                                cellPoint.y + ((cellFrame.size.height - magnifyingGlassImage.size.height) / 2),
+                                magnifyingGlassImage.size.width,
+                                magnifyingGlassImage.size.height);
+    NSString *txt = [NSString stringWithFormat:@"%ld row%@", (long)qr.size, qr.size > 1 ? @"s" : @""];
+    [magnifyingGlassCell drawInteriorWithFrame:dstRect inView:controlView];
+    [txt drawAtPoint:NSMakePoint(cellPoint.x+20, cellPoint.y+1) withAttributes:textAttrs];
 }
 
 @end

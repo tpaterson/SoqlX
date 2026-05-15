@@ -1,4 +1,4 @@
-// Copyright (c) 2007,2015 Simon Fell
+// Copyright (c) 2007,2015,2020 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -20,64 +20,44 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ZKQueryResult.h"
-
-extern NSString *DELETE_COLUMN_IDENTIFIER;
-extern NSString *ERROR_COLUMN_IDENTIFIER;
-extern NSArray  *ALL_APP_COLUMN_IDENTIFIERS;
 
 @class ZKSObject;
+@class ZKQueryResult;
 
 @protocol EditableQueryResultWrapperDelegate
 -(void) dataChangedOnObject:(ZKSObject *)sobject field:(NSString *)fieldName value:(id)value;
+-(BOOL) isEditing;
 @end
 
 @interface EditableQueryResultWrapper : NSObject<NSTableViewDataSource, NSTableViewDelegate, NSControlTextEditingDelegate> {
-	NSObject<EditableQueryResultWrapperDelegate>	*delegate;
-	ZKQueryResult	*result;
-	BOOL			editable;
-	NSCell			*imageCell;
-	NSMutableSet		*checkedRows;
-	NSMutableDictionary *rowErrors;
+    NSCell              *imageCell;
 }
 
-- (id)initWithQueryResult:(ZKQueryResult *)qr;
+-(instancetype)initWithQueryResult:(ZKQueryResult *)qr NS_DESIGNATED_INITIALIZER;
+-(instancetype)init NS_UNAVAILABLE;
 
-- (ZKQueryResult *)queryResult;
-- (void)setQueryResult:(ZKQueryResult *)newResults;
+@property ZKQueryResult     *queryResult;
+@property  BOOL              editable;
+@property (weak) NSObject<EditableQueryResultWrapperDelegate> *delegate;
 
-- (BOOL)editable;
-- (void)setEditable:(BOOL)newAllowEdit;
+@property (readonly) BOOL hasCheckedRows;
 
-- (NSObject<EditableQueryResultWrapperDelegate> *)delegate;
-- (void)setDelegate:(NSObject<EditableQueryResultWrapperDelegate> *)aValue;
-
-- (BOOL)hasCheckedRows;
-- (int)numCheckedRows;
-- (NSSet *)indexesOfCheckedRows;
-- (void)setChecked:(BOOL)checked onRowWithIndex:(NSNumber *)index;
-
-- (BOOL)hasErrors;
+@property (readonly) BOOL hasErrors;
 - (void)clearErrors;
-- (void)addError:(NSString *)errMsg forRowIndex:(NSNumber *)index;
 
 - (BOOL)allowEdit:(NSTableColumn *)aColumn;
 
-// if you want to make inplace edits to the rows, then create a mutating context, make your changes, then finally call update.
-- (id)createMutatingRowsContext;
-- (void)remmoveRowAtIndex:(int)index context:(id)mutatingContext;
-- (void)updateRowsFromContext:(id)context;
+// remove row(s), returns the number of rows removed.
+- (NSUInteger)removeRowsWithIds:(NSSet<NSString*>*)recordIds;
 
 // pass through to QueryResult
-- (int)size;
-- (BOOL)done;
-- (NSString *)queryLocator;
-- (NSArray *)records;
-// make it compaitble with the data source for a table
-- (int)numberOfRowsInTableView:(NSTableView *)v;
-- (id)tableView:(NSTableView *)view objectValueForTableColumn:(NSTableColumn *)tc row:(int)rowIdx;
+@property (readonly) NSInteger      size;
+@property (readonly) BOOL           done;
+@property (readonly, copy) NSString *queryLocator;
+@property (readonly, copy) NSArray  *records;
+
 @end
 
 @interface EditableQueryResultWrapper (TableColumns)
--(NSArray *)allSystemColumnIdentifiers;
+@property (readonly, copy) NSArray *allSystemColumnIdentifiers;
 @end

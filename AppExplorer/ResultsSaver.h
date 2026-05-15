@@ -1,4 +1,4 @@
-// Copyright (c) 2008,2012,2015 Simon Fell
+// Copyright (c) 2008,2012,2015,2018 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -26,13 +26,15 @@
 @class ZKQueryResult;
 
 @interface BufferedWriter : NSObject {
-	NSOutputStream	*stream;
-	NSMutableData	*buffer;
-	NSUInteger		capacity;
+    NSOutputStream   *stream;
+    NSMutableData    *buffer;
+    NSUInteger        capacity;
 }
--(id)initOnStream:(NSOutputStream *)s;
+-(instancetype)initOnStream:(NSOutputStream *)s capacity:(NSUInteger)cap NS_DESIGNATED_INITIALIZER;
+-(instancetype)initOnStream:(NSOutputStream *)s;
+-(instancetype)init NS_UNAVAILABLE;
 
--(void)write:(const uint8_t *)data maxLength:(uint)len;
+-(void)write:(const uint8_t *)data maxLength:(NSUInteger)len;
 -(void)flush:(BOOL)ensureFullyFlushed;
 -(void)close;
 
@@ -44,36 +46,36 @@
 @end
 
 @interface ResultsSaver : NSObject {
-    NSWindow		*progressWindow;
-	NSView			*optionsView;
-	NSButtonCell	*buttonAll;
-	NSButtonCell	*buttonCurrent;
-	
-	BOOL				saveAll;
-	NSOperationQueue	*queryQueue;
-	NSOperationQueue	*saveQueue;
-	BufferedWriter		*stream;
-	ZKSforceClient		*client;
-	QueryResultTable	*results;
-	NSURL               *filename;
-	NSDate				*started;
-	
-	NSUInteger			rowsWritten;
+    NSWindow        *progressWindow;
+    NSView          *optionsView;
+    NSButtonCell    *buttonAll;
+    NSButtonCell    *buttonCurrent;
+    
+    BOOL                saveAll;
+    NSOperationQueue    *saveQueue;
+    BufferedWriter      *stream;
+    ZKSforceClient      *client;
+    QueryResultTable    *results;
+    NSURL               *filename;
+    NSDate              *started;
+    
+    NSUInteger          rowsWritten;
 }
 
--(id)initWithResults:(QueryResultTable *)res client:(ZKSforceClient *)c;
+-(instancetype)initWithResults:(QueryResultTable *)res client:(ZKSforceClient *)c NS_DESIGNATED_INITIALIZER;
+-(instancetype)init NS_UNAVAILABLE;
 
 -(void)save:(NSWindow *)parentWindow;
 
-@property (retain) IBOutlet NSWindow *progressWindow;
-@property (retain) IBOutlet NSView *optionsView;
-@property (retain) IBOutlet NSButtonCell *buttonAll;
-@property (retain) IBOutlet NSButtonCell *buttonCurrent;
+@property (strong) IBOutlet NSWindow *progressWindow;
+@property (strong) IBOutlet NSView *optionsView;
+@property (strong) IBOutlet NSButtonCell *buttonAll;
+@property (strong) IBOutlet NSButtonCell *buttonCurrent;
 
 @property (assign)   BOOL       saveAll;
 @property (assign)   NSUInteger rowsWritten;
 @property (readonly) NSUInteger totalRows;
-@property (retain)   NSURL      *filename;
+@property (strong)   NSURL      *filename;
 
 @end
 

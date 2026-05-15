@@ -24,10 +24,6 @@
 
 @implementation BaseUserBasedController
 
--(void)dealloc {
-    [prefsPrefix release];
-    [super dealloc];
-}
 
 -(NSString *)prefName:(NSString *)pref {
     return [NSString stringWithFormat:@"%@-%@", prefsPrefix, pref];
@@ -39,12 +35,11 @@
 }
 
 -(NSString *)prefsPrefix {
-    return [[prefsPrefix retain] autorelease];
+    return prefsPrefix;
 }
 
 -(void)setPrefsPrefix:(NSString *)pp {
-    [prefsPrefix autorelease];
-    prefsPrefix = [pp retain];
+    prefsPrefix = pp;
     [self onPrefsPrefixSet:pp];
 }
 
@@ -53,8 +48,8 @@
 @implementation BaseWindowToggleController
 
 -(void)awakeFromNib {
-	[panelWindow setAlphaValue:0.0];
-    [panelWindow setDelegate:self];
+    panelWindow.alphaValue = 0.0;
+    panelWindow.delegate = self;
     visible = NO;
     terminating = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
@@ -62,11 +57,10 @@
 
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
 }
 
 -(NSString *)windowVisiblePrefName {
-    @throw [[[NSException alloc] initWithName:@"ABSTRACT_METHOD" reason:@"subclasses need to implement windowVisiblePrefName" userInfo:nil] autorelease];
+    @throw [[NSException alloc] initWithName:@"ABSTRACT_METHOD" reason:@"subclasses need to implement windowVisiblePrefName" userInfo:nil];
 }
 
 -(BOOL)windowVisible {
@@ -94,8 +88,8 @@
     [self willChangeValueForKey:@"windowVisible"];
     [self setWindowVisible:NO updateWindow:NO];
     [self didChangeValueForKey:@"windowVisible"];
-	[[panelWindow animator] setAlphaValue:0.0];
-    [[panelWindow parentWindow] removeChildWindow:panelWindow];
+    [panelWindow animator].alphaValue = 0.0;
+    [panelWindow.parentWindow removeChildWindow:panelWindow];
 }
 
 -(void)onPrefsPrefixSet:(NSString *)pp {

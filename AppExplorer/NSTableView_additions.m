@@ -26,13 +26,13 @@
 -(void)zkCopyTableDataToClipboard {
     NSMutableString *d = [NSMutableString string];
     id<NSTableViewDataSource> ds = self.dataSource;
-    int rows = [ds numberOfRowsInTableView:self];
-    for (int r=0; r < rows; r++) {
+    NSInteger rows = [ds numberOfRowsInTableView:self];
+    for (NSInteger r=0; r < rows; r++) {
         bool firstCol = YES;
         for (NSTableColumn *col in self.tableColumns) {
             if (!firstCol) {
                 [d appendString:@"\t"];
-            } else if ([d length] > 0) {
+            } else if (d.length > 0) {
                 [d appendString:@"\n"];
             }
             NSObject *cv = [ds tableView:self objectValueForTableColumn:col row:r];
@@ -40,11 +40,11 @@
             if ([cv isKindOfClass:[NSString class]]) {
                 sv = (NSString *)cv;
             } else if ([cv isKindOfClass:[NSAttributedString class]]) {
-                sv = [(NSAttributedString *)cv string];
+                sv = ((NSAttributedString *)cv).string;
             } else {
-                sv = [cv description];
+                sv = cv.description;
             }
-            if ([sv length] > 0)
+            if (sv.length > 0)
                 [d appendString:sv];
             firstCol = NO;
         }

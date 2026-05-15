@@ -31,8 +31,26 @@ extern NSString *PREF_QUERY_SORT_FIELDS;
 // If false (default) we'll skip the component fields and just select the compound field (short resulting query text, slightly cleaner results table, but not editable)
 extern NSString *PREF_SKIP_ADDRESS_FIELDS;
 
-// What font size do we want for text ?
+// What font size do we want for text ? migrated to NSFont userFixedPitchFont in 3.1
 extern NSString *PREF_TEXT_SIZE;
 
 // Should we exit the app if the last window is closed, or stay running ?
 extern NSString *PREF_QUIT_ON_LAST_WINDOW_CLOSE;
+
+// The number of recent queries we should keep in the list.
+extern NSString *PREF_MAX_RECENT_QUERIES;
+
+// In the details window should we filter out empty property values?
+extern NSString *PREF_FILTER_EMPY_PROPS;
+
+// enable the syntax highlighter in the SOQL editor
+extern NSString *PREF_SOQL_SYNTAX_HIGHLIGHTING;
+
+// enables the popup field completions in the SOQL editor
+extern NSString *PREF_SOQL_POPUP_COMPLETIONS;
+
+// Automatically upper case keywords in the SOQL editor
+extern NSString *PREF_SOQL_UPPERCASE_KEYWORDS;
+
+// Should the apex editor beep when it determines there's a brace character mismatch?
+extern NSString *PREF_BRACES_MISMATCH_BEEP;

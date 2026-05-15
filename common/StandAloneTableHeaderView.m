@@ -21,51 +21,38 @@
 
 #import "StandAloneTableHeaderView.h"
 
+@interface StandAloneTableHeaderView()
+@property (copy) NSDictionary *textAttributes;
+@property (strong) NSColor *backgroundColor;
+@property (strong) NSColor *borderColor;
+@end
+
 @implementation StandAloneTableHeaderView
 
--(id)initWithFrame:(NSRect)rect {
-	self = [super initWithFrame:rect];
-    
-    /*
-	textAttributes =  [[NSMutableDictionary dictionaryWithObjectsAndKeys:
-						[NSFont titleBarFontOfSize:11.0], NSFontAttributeName,
-						[NSColor blackColor], NSForegroundColorAttributeName,
-						nil] retain];
-						
-	gradient = [[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:
-                                                   [NSColor whiteColor],
-                                                   [NSColor colorWithCalibratedRed:0.875 green:0.875 blue:0.875 alpha:1.0],
-                                                   [NSColor whiteColor],
-                                                   nil]];
-    */
-	return self;
+-(instancetype)initWithFrame:(NSRect)rect {
+    self = [super initWithFrame:rect];
+    self.textAttributes = @{
+                       NSFontAttributeName: [NSFont titleBarFontOfSize:11.0],
+                       NSForegroundColorAttributeName : [NSColor headerTextColor],
+                       };
+    self.backgroundColor = [NSColor colorNamed:@"table.header.background"];
+    self.borderColor = [NSColor colorNamed:@"table.header.border"];
+    return self;
 }
 
--(void)dealloc {
-	[headerText release];
-	[textAttributes release];
-	[gradient release];
-	[super dealloc];
-}
 
 -(void)drawRect:(NSRect)rect {
-	NSRect b = [self bounds];
-	//[[NSColor colorWithCalibratedRed:0.698 green:0.698 blue:0.698 alpha:1.0] set];
-	NSRectFill(b);
-	[gradient drawInRect:NSInsetRect(b,1,1) angle:90];
-	NSRect txtRect = NSInsetRect(b, 5,1);
-	[headerText drawInRect:txtRect withAttributes:textAttributes];
-}
-
--(void)setHeaderText:(NSString *)newValue {
-	if (newValue != headerText) {
-		[headerText release];
-		headerText = [newValue copy];
-	}
-}
-
--(NSString *)headerText {
-	return [[headerText retain] autorelease];
+    NSRect b = self.bounds;
+    [self.borderColor set];
+    NSRectFill(b);
+    [self.backgroundColor set];
+    b.size.height -= 2;
+    b.size.width -= 1;
+    b.origin.y += 1;
+    NSRectFill(b);
+    NSSize txtSize = [self.headerText sizeWithAttributes:self.textAttributes];
+    NSPoint txtPoint =NSMakePoint(b.origin.x + 6, (b.size.height - txtSize.height) / 2);
+    [self.headerText drawAtPoint:txtPoint withAttributes:self.textAttributes];
 }
 
 @end

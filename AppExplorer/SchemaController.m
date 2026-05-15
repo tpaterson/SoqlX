@@ -24,13 +24,11 @@
 @implementation SchemaController
 
 -(void)setDescribeDataSource:(DescribeListDataSource*)desc {
-	[schemaView setDescribesDataSource:desc];
+    schemaView.describesDataSource = desc;
 }
 
--(void)setSchemaViewToSObject:(ZKDescribeSObject *)sobject;
-{
-	[schemaWindow makeFirstResponder:schemaView];
-	[schemaView setCentralSObject:sobject];
+-(void)setSchemaViewToSObject:(ZKDescribeSObject *)sobject {
+    [schemaView setCentralSObject:sobject];
 }
 
 @end

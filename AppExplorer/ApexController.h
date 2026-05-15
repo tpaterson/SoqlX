@@ -1,4 +1,4 @@
-// Copyright (c) 2010 Simon Fell
+// Copyright (c) 2010,2018 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -25,59 +25,62 @@
 @class ZKSforceClient;
 @class StandAloneTableHeaderView;
 @class ZKExecuteAnonymousResult;
+@class MGSFragariaView;
 
 @interface ApexResult : NSObject {
-	NSString					*debugLog;
-	ZKExecuteAnonymousResult	*res;
+    NSString                    *debugLog;
+    ZKExecuteAnonymousResult    *res;
 }
 +(ApexResult *)fromResult:(ZKExecuteAnonymousResult *)r andLog:(NSString *)debugLog;
 
--(NSString *)debugLog;
+@property (readonly, copy) NSString *debugLog;
 
-- (int)column;
-- (int)line;
-- (BOOL)compiled;
-- (NSString *)compileProblem;
-- (NSString *)exceptionMessage;
-- (NSString *)exceptionStackTrace;
-- (BOOL)success;
+@property (readonly) int column;
+@property (readonly) int line;
+@property (readonly) BOOL compiled;
+@property (readonly, copy) NSString *compileProblem;
+@property (readonly, copy) NSString *exceptionMessage;
+@property (readonly, copy) NSString *exceptionStackTrace;
+@property (readonly) BOOL success;
 
--(NSImage *)compiledStatusImage;
--(NSImage *)successImage;
+@property (readonly, copy) NSImage *compiledStatusImage;
+@property (readonly, copy) NSImage *successImage;
 
--(NSString *)resultText;
+@property (readonly, copy) NSString *resultText;
 
 @end
 
 @interface ApexController : NSObject {
-	NSString		*apex;
-	ZKApexClient	*apexClient;
-	NSMutableArray	*results;
+    NSString        *apex;
+    ZKApexClient    *apexClient;
+    NSMutableArray  *results;
 
-	IBOutlet StandAloneTableHeaderView	*textHeader;
-	IBOutlet NSArrayController			*resultsController;
+    IBOutlet StandAloneTableHeaderView    *textHeader;
+    IBOutlet NSArrayController            *resultsController;
 }
 
 -(void)setSforceClient:(ZKSforceClient *)client;
 
-@property (retain) IBOutlet NSTextView *apexTextField;
-@property (retain) NSString *apex;
+@property (strong) IBOutlet MGSFragariaView *apexTextField;
+@property (strong) NSString *apex;
 
--(NSUInteger)countOfResults;
+@property (readonly) NSUInteger countOfResults;
 -(ApexResult *)objectInResultsAtIndex:(NSUInteger)idx;
 -(void)insertObject:(ApexResult *)r inResultsAtIndex:(NSUInteger)idx;
 -(void)removeObjectFromResultsAtIndex:(NSUInteger)idx;
 
 -(IBAction)executeApex:(id)sender;
 
--(NSArray *)logLevelNames;
+-(void)changeEditFont:(id)sender;
 
-@property (retain) NSDictionary *dbLogLevel;
-@property (retain) NSDictionary *workflowLogLevel;
-@property (retain) NSDictionary *validationLogLevel;
-@property (retain) NSDictionary *calloutLogLevel;
-@property (retain) NSDictionary *apexCodeLogLevel;
-@property (retain) NSDictionary *apexProfilingLogLevel;
+@property (readonly, copy) NSArray *logLevelNames;
+
+@property (strong) NSDictionary *dbLogLevel;
+@property (strong) NSDictionary *workflowLogLevel;
+@property (strong) NSDictionary *validationLogLevel;
+@property (strong) NSDictionary *calloutLogLevel;
+@property (strong) NSDictionary *apexCodeLogLevel;
+@property (strong) NSDictionary *apexProfilingLogLevel;
 
 @end
 

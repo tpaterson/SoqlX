@@ -20,22 +20,18 @@
 //
 
 #import "SearchQueryResult.h"
-#import "ZKSObject.h"
-#import "ZKQueryResult+NSTableView.h"
+#import <ZKSforce/ZKSObject.h>
+#import <ZKSforce/ZKQueryResult+NSTableView.h>
+#import <ZKSforce/ZKSearchResult.h>
+#import <ZKSforce/ZKSearchRecord.h>
 
 @implementation SearchQueryResult
 
-+(id)searchQueryResults:(NSArray *)searchResults {
-    return [[[SearchQueryResult alloc] initWithRecords:searchResults size:[searchResults count] done:TRUE queryLocator:nil] autorelease];
-}
-
-- (id)tableView:(NSTableView *)view objectValueForTableColumn:(NSTableColumn *)tc row:(int)rowIdx {
-    // handle the SObject__Type column used in search results.
-    if ([[tc identifier] isEqualToString:@"SObject__Type"]) {
-        ZKSObject *r = [records objectAtIndex:rowIdx];
-        return [r type];
-    }
-    return [super tableView:view objectValueForTableColumn:tc row:rowIdx];
++(instancetype)searchQueryResults:(ZKSearchResult *)searchResults {
+    return [[SearchQueryResult alloc] initWithRecords:[searchResults.searchRecords valueForKey:@"record"]
+                                                 size:(int)searchResults.searchRecords.count
+                                                 done:TRUE
+                                         queryLocator:nil];
 }
 
 @end

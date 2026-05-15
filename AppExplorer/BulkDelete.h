@@ -1,4 +1,4 @@
-// Copyright (c) 2009 Simon Fell
+// Copyright (c) 2009,2018 Simon Fell
 //
 // Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"), 
@@ -25,18 +25,11 @@
 @class QueryResultTable;
 @class ZKSforceClient;
 
-@interface BulkDelete : NSObject {
-	ProgressController	*progress;
-	NSOperationQueue	*queue;
-	
-	NSArray				*indexes;
-	NSArray				*sfdcIds;
-	NSMutableArray		*results;
-	ZKSforceClient		*client;
-	QueryResultTable	*table;
-}
+@interface BulkDelete : NSObject
 
--(id)initWithClient:(ZKSforceClient *)client;
+-(instancetype)initWithClient:(ZKSforceClient *)client NS_DESIGNATED_INITIALIZER;
+-(instancetype)init NS_UNAVAILABLE;
+
 -(void)performBulkDelete:(QueryResultTable *)dataSource window:(NSWindow *)modelWindow;
 
 @end
